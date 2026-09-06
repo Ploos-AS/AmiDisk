@@ -26,13 +26,17 @@ DF0-DF3  | ADF   | Greaseweazle later
 
 ## Physical floppy
 
-M1 introduces a read-only `trackdisk.device` backend for standard Amiga floppy units. It will handle safe open/close, media changes, write-protect state, reads and explicit error mapping. Write and format operations come later.
+M1 provides the qualified read-only `trackdisk.device` backend for standard Amiga floppy units. It handles safe open/close, media changes, write-protect state, reads and explicit error mapping. Write and format operations come later.
 
 A Gotek behaving as a normal Amiga floppy drive is expected to work through this backend; AmiDisk does not need to special-case it for basic disk operations.
 
 ## Images
 
-ADF is the first image format and baseline for standard AmigaDOS disk imaging. Extended ADF, DMS and raw/custom-track representations are later work.
+M2 introduces a separate read-only standard ADF backend. A normal Amiga DD ADF is treated as 80 cylinders x 2 heads x 11 sectors x 512 bytes, exactly 901120 bytes. CHS requests are mapped to linear sector offsets and every read must return exactly one sector.
+
+The image backend deliberately does not infer filesystem validity: an ADF may contain OFS, FFS, custom data or an invalid filesystem and still be a structurally valid standard ADF.
+
+Extended ADF, DMS and raw/custom-track representations are later work.
 
 ## Flux
 
@@ -41,3 +45,5 @@ Greaseweazle is intentionally a distinct future backend. Flux capture can preser
 ## Safety
 
 Destructive operations must be explicit. A read failure must never silently become fabricated good data. Repair, filesystem modification, bootblock modification, format and overwrite are separate operations from observation and imaging.
+
+M2 retains the read-only boundary for both physical and standard ADF backends. Writable ADF creation/restore and physical-media writes are deferred until a later qualified milestone.

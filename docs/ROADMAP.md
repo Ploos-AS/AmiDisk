@@ -11,15 +11,15 @@
 
 ## M1 - trackdisk read engine
 
-Read-only DF0-DF3 backend: open/close, media change, write protection, standard reads, deterministic errors and diagnostic CLI. Native qualification required.
+Read-only DF0-DF3 backend: open/close, media change, write protection, standard reads, deterministic errors and diagnostic CLI. Native runtime qualification complete.
 
-## M2 - Copy and verify
+## M2 - Standard ADF read engine
 
-DFx-to-DFy, disk-to-RAM-to-disk, verify-after-write, per-track state and explicit destructive-operation confirmation.
+Read-only standard 880 KiB ADF backend: exact geometry/size validation, deterministic errors, CHS sector reads and diagnostic CLI. No image creation or media writes.
 
-## M3 - ADF engine
+## M3 - Copy, image and verify
 
-Create, restore and verify standard ADF images with robust short-I/O handling.
+Introduce controlled write paths only after M2 qualification: disk-to-ADF creation, ADF-to-disk restore, DFx-to-DFy copy, disk-to-RAM-to-disk, verify-after-write, per-track state and explicit destructive-operation confirmation.
 
 ## M4 - Recovery
 

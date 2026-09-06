@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "core/ad_version.h"
+#include "io/adf/adf.h"
 #include "io/trackdisk/trackdisk.h"
 
 static void usage(const char *program)
@@ -11,6 +12,8 @@ static void usage(const char *program)
     printf("  %s --version\n", program);
     printf("  %s probe <unit>\n", program);
     printf("  %s read-sector <unit> <cylinder> <head> <sector>\n", program);
+    printf("  %s adf-info <path>\n", program);
+    printf("  %s adf-read-sector <path> <cylinder> <head> <sector>\n", program);
 }
 
 static int parse_ulong(const char *text, ULONG *value)
@@ -29,6 +32,15 @@ static int parse_ulong(const char *text, ULONG *value)
 
     *value = (ULONG)parsed;
     return 1;
+}
+
+static void print_prefix16(const unsigned char *buffer)
+{
+    ULONG i;
+
+    for (i = 0; i < 16UL; ++i) {
+        printf("%02x%c", (unsigned int)buffer[i], i == 15UL ? '\n' : ' ');
+    }
 }
 
 static int command_probe(ULONG unit)
@@ -62,7 +74,6 @@ static int command_read_sector(ULONG unit, ULONG cylinder, ULONG head, ULONG sec
     AdTrackDisk disk;
     AdTdResult result;
     unsigned char buffer[AD_TD_SECTOR_SIZE];
-    ULONG i;
 
     result = ad_td_open(&disk, unit);
     if (result != AD_TD_OK) {
@@ -75,9 +86,7 @@ static int command_read_sector(ULONG unit, ULONG cylinder, ULONG head, ULONG sec
         printf("DF%u C%u H%u S%u read OK\n",
                (unsigned int)unit, (unsigned int)cylinder,
                (unsigned int)head, (unsigned int)sector);
-        for (i = 0; i < 16UL; ++i) {
-            printf("%02x%c", (unsigned int)buffer[i], i == 15UL ? '\n' : ' ');
-        }
+        print_prefix16(buffer);
     } else {
         fprintf(stderr, "DF%u C%u H%u S%u: %s\n",
                 (unsigned int)unit, (unsigned int)cylinder,
@@ -87,6 +96,57 @@ static int command_read_sector(ULONG unit, ULONG cylinder, ULONG head, ULONG sec
 
     ad_td_close(&disk);
     return result == AD_TD_OK ? 0 : 2;
+}
+
+static int command_adf_info(const char *path)
+{
+    AdAdfImage image;
+    AdAdfResult result;
+
+    result = ad_adf_open(&image, path);
+    if (result != AD_ADF_OK) {
+        fprintf(stderr, "%s: %s\n", path, ad_adf_result_string(result));
+        return 2;
+    }
+
+    printf("ADF: %s\n", path);
+    printf("size=%u bytes cylinders=%u heads=%u sectors/track=%u sector-size=%u\n",
+           (unsigned int)image.size_bytes,
+           (unsigned int)AD_ADF_CYLINDERS,
+           (unsigned int)AD_ADF_HEADS,
+           (unsigned int)AD_ADF_SECTORS_PER_TRACK,
+           (unsigned int)AD_ADF_SECTOR_SIZE);
+    ad_adf_close(&image);
+    return 0;
+}
+
+static int command_adf_read_sector(const char *path, ULONG cylinder,
+                                   ULONG head, ULONG sector)
+{
+    AdAdfImage image;
+    AdAdfResult result;
+    unsigned char buffer[AD_ADF_SECTOR_SIZE];
+
+    result = ad_adf_open(&image, path);
+    if (result != AD_ADF_OK) {
+        fprintf(stderr, "%s: %s\n", path, ad_adf_result_string(result));
+        return 2;
+    }
+
+    result = ad_adf_read_sector(&image, cylinder, head, sector, buffer);
+    if (result == AD_ADF_OK) {
+        printf("ADF %s C%u H%u S%u read OK\n", path,
+               (unsigned int)cylinder, (unsigned int)head,
+               (unsigned int)sector);
+        print_prefix16(buffer);
+    } else {
+        fprintf(stderr, "ADF %s C%u H%u S%u: %s\n", path,
+                (unsigned int)cylinder, (unsigned int)head,
+                (unsigned int)sector, ad_adf_result_string(result));
+    }
+
+    ad_adf_close(&image);
+    return result == AD_ADF_OK ? 0 : 2;
 }
 
 int main(int argc, char **argv)
@@ -118,6 +178,16 @@ int main(int argc, char **argv)
             return 1;
         }
         return command_read_sector(unit, cylinder, head, sector);
+    }
+
+    if (argc == 3 && strcmp(argv[1], "adf-info") == 0) {
+        return command_adf_info(argv[2]);
+    }
+
+    if (argc == 6 && strcmp(argv[1], "adf-read-sector") == 0 &&
+        parse_ulong(argv[3], &cylinder) && parse_ulong(argv[4], &head) &&
+        parse_ulong(argv[5], &sector)) {
+        return command_adf_read_sector(argv[2], cylinder, head, sector);
     }
 
     usage(argv[0]);
