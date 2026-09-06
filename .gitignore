@@ -1,0 +1,5 @@
+AmiDisk
+*.o
+*.obj
+*.info
+.DS_Store
