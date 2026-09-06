@@ -94,6 +94,11 @@ AdTdResult ad_td_get_status(AdTrackDisk *disk, AdTdStatus *status)
         return result;
     }
     status->media_present = (disk->io->iotd_Req.io_Actual == 0);
+    status->write_protected = 0;
+    /* TD_PROTSTATUS may fail when there is no disk in the drive. */
+    if (!status->media_present) {
+        return AD_TD_OK;
+    }
 
     result = ad_td_do(disk, TD_PROTSTATUS, NULL, 0, 0);
     if (result != AD_TD_OK) {
