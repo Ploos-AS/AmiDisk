@@ -39,18 +39,18 @@ static int command_probe(ULONG unit)
 
     result = ad_td_open(&disk, unit);
     if (result != AD_TD_OK) {
-        fprintf(stderr, "DF%lu: %s\n", unit, ad_td_result_string(result));
+        fprintf(stderr, "DF%u: %s\n", (unsigned int)unit, ad_td_result_string/g(result));
         return 2;
     }
 
     result = ad_td_get_status(&disk, &status);
     if (result == AD_TD_OK) {
-        printf("DF%lu: media=%s write-protected=%s\n",
-               unit,
+        printf("DF%u: media=%s write-protected=%s\n",
+               (unsigned int)unit,
                status.media_present ? "present" : "absent",
                status.write_protected ? "yes" : "no");
     } else {
-        fprintf(stderr, "DF%lu: %s\n", unit, ad_td_result_string(result));
+        fprintf(stderr, "DF%u: %s\n", (unsigned int)unit, ad_td_result_string/g(result));
     }
 
     ad_td_close(&disk);
@@ -66,19 +66,23 @@ static int command_read_sector(ULONG unit, ULONG cylinder, ULONG head, ULONG sec
 
     result = ad_td_open(&disk, unit);
     if (result != AD_TD_OK) {
-        fprintf(stderr, "DF%lu: %s\n", unit, ad_td_result_string(result));
+        fprintf(stderr, "DF%u: %s\n", (unsigned int)unit, ad_td_result_string/g(result));
         return 2;
     }
 
     result = ad_td_read_sector(&disk, cylinder, head, sector, buffer);
     if (result == AD_TD_OK) {
-        printf("DF%lu C%lu H%lu S%lu read OK\n", unit, cylinder, head, sector);
+        printf("DF%u C%u H%u S%u read OK\n",
+               (unsigned int)unit, (unsigned int)cylinder,
+               (unsigned int)head, (unsigned int)sector);
         for (i = 0; i < 16UL; ++i) {
-            printf("%02lx%c", (ULONG)buffer[i], i == 15UL ? '\n' : ' ');
+            printf("%02x%c", (unsigned int)buffer[i], i == 15UL ? '\n' : ' ');
         }
     } else {
-        fprintf(stderr, "DF%lu C%lu H%lu S%lu: %s\n",
-                unit, cylinder, head, sector, ad_td_result_string(result));
+        fprintf(stderr, "DF%u C%u H%u S%u: %s\n",
+                (unsigned int)unit, (unsigned int)cylinder,
+                (unsigned int)head, (unsigned int)sector,
+                ad_td_result_string(result));
     }
 
     ad_td_close(&disk);
