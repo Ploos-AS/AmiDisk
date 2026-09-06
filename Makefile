@@ -1,4 +1,7 @@
-CC ?= m68k-amigaos-gcc
+ifeq ($(origin CC),default)
+CC := m68k-amigaos-gcc
+endif
+
 CFLAGS ?= -Os -Wall -Wextra -Werror -m68000 -noixemul
 CPPFLAGS ?= -Isrc
 LDFLAGS ?= -noixemul
