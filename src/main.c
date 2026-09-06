@@ -39,7 +39,7 @@ static int command_probe(ULONG unit)
 
     result = ad_td_open(&disk, unit);
     if (result != AD_TD_OK) {
-        fprintf(stderr, "DF%u: %s\n", (unsigned int)unit, ad_td_result_string/g(result));
+        fprintf(stderr, "DF%u: %s\n", (unsigned int)unit, ad_td_result_string(result));
         return 2;
     }
 
@@ -50,7 +50,7 @@ static int command_probe(ULONG unit)
                status.media_present ? "present" : "absent",
                status.write_protected ? "yes" : "no");
     } else {
-        fprintf(stderr, "DF%u: %s\n", (unsigned int)unit, ad_td_result_string/g(result));
+        fprintf(stderr, "DF%u: %s\n", (unsigned int)unit, ad_td_result_string(result));
     }
 
     ad_td_close(&disk);
@@ -66,7 +66,7 @@ static int command_read_sector(ULONG unit, ULONG cylinder, ULONG head, ULONG sec
 
     result = ad_td_open(&disk, unit);
     if (result != AD_TD_OK) {
-        fprintf(stderr, "DF%u: %s\n", (unsigned int)unit, ad_td_result_string/g(result));
+        fprintf(stderr, "DF%u: %s\n", (unsigned int)unit, ad_td_result_string(result));
         return 2;
     }
 
