@@ -1,0 +1,4 @@
+FailAt 21
+System:AmiDisk probe 1
+System:AmiDisk probe 2
+System:AmiDisk probe 3

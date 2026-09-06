@@ -1,0 +1,19 @@
+main session
+FS-UAE 3.2.35 (Built for Linux x86-64)
+Known ROM 'KS ROM v2.04 (A500+)' loaded
+CPU=68000, FPU=0, MMU=0, JIT=0. prefetch and cycle-exact 24-bit
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+ -- stub -- target_addtorecent name="" t=0
+ -- stub -- target_addtorecent name="/tmp/amidisk-m1/disk-a.adf" t=0
+ -- stub -- target_addtorecent name="" t=0
+ -- stub -- target_addtorecent name="/tmp/amidisk-m1/disk-b.adf" t=0
+write-protect session
+FS-UAE 3.2.35 (Built for Linux x86-64)
+set option "floppy_write_protect" to "true" (result: 1)
+Known ROM 'KS ROM v2.04 (A500+)' loaded
+CPU=68000, FPU=0, MMU=0, JIT=0. prefetch and cycle-exact 24-bit
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]

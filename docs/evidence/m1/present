@@ -1,0 +1,4 @@
+FailAt 21
+System:AmiDisk --version
+System:AmiDisk probe 0
+System:AmiDisk read-sector 0 0 0 0
