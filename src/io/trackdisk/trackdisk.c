@@ -95,7 +95,6 @@ AdTdResult ad_td_get_status(AdTrackDisk *disk, AdTdStatus *status)
     }
     status->media_present = (disk->io->iotd_Req.io_Actual == 0);
     status->write_protected = 0;
-    /* TD_PROTSTATUS may fail when there is no disk in the drive. */
     if (!status->media_present) {
         return AD_TD_OK;
     }
@@ -156,6 +155,39 @@ AdTdResult ad_td_read_sector(AdTrackDisk *disk, ULONG cylinder, ULONG head,
     return ad_td_do(disk, CMD_READ, buffer, AD_TD_SECTOR_SIZE, offset);
 }
 
+AdTdResult ad_td_write_sector(AdTrackDisk *disk, ULONG cylinder, ULONG head,
+                              ULONG sector, const void *buffer)
+{
+    AdTdStatus status;
+    ULONG logical_sector;
+    ULONG offset;
+    AdTdResult result;
+
+    if (buffer == NULL) {
+        return AD_TD_ERR_ARGUMENT;
+    }
+    if (cylinder >= AD_TD_CYLINDERS || head >= AD_TD_HEADS ||
+        sector >= AD_TD_SECTORS_PER_TRACK) {
+        return AD_TD_ERR_RANGE;
+    }
+
+    result = ad_td_get_status(disk, &status);
+    if (result != AD_TD_OK) {
+        return result;
+    }
+    if (!status.media_present) {
+        return AD_TD_ERR_NO_MEDIA;
+    }
+    if (status.write_protected) {
+        return AD_TD_ERR_WRITE_PROTECTED;
+    }
+
+    logical_sector = ((cylinder * AD_TD_HEADS) + head) * AD_TD_SECTORS_PER_TRACK + sector;
+    offset = logical_sector * AD_TD_SECTOR_SIZE;
+
+    return ad_td_do(disk, CMD_WRITE, (APTR)buffer, AD_TD_SECTOR_SIZE, offset);
+}
+
 const char *ad_td_result_string(AdTdResult result)
 {
     switch (result) {
@@ -167,6 +199,7 @@ const char *ad_td_result_string(AdTdResult result)
     case AD_TD_ERR_IO: return "trackdisk.device I/O error";
     case AD_TD_ERR_NO_MEDIA: return "no media present";
     case AD_TD_ERR_RANGE: return "sector address out of range";
+    case AD_TD_ERR_WRITE_PROTECTED: return "media is write-protected";
     default: return "unknown error";
     }
 }
