@@ -6,6 +6,7 @@
 #include "io/adf/adf.h"
 #include "io/trackdisk/trackdisk.h"
 #include "operations/image_adf.h"
+#include "operations/restore_preflight.h"
 #include "operations/verify_adf.h"
 
 static void usage(const char *program)
@@ -18,6 +19,7 @@ static void usage(const char *program)
     printf("  %s adf-read-sector <path> <cylinder> <head> <sector>\n", program);
     printf("  %s image-adf <unit> <path>\n", program);
     printf("  %s verify-adf <unit> <path>\n", program);
+    printf("  %s restore-preflight <path> <unit> <ERASE-DFn>\n", program);
     printf("  %s qualify-media-change <unit>\n", program);
 }
 
@@ -215,6 +217,34 @@ static int command_verify_adf(ULONG unit, const char *path)
     return 2;
 }
 
+static int command_restore_preflight(const char *path, ULONG unit,
+                                     const char *confirmation)
+{
+    AdRestorePreflightReport report;
+    AdRestorePreflightResult result;
+
+    printf("Restore preflight: %s -> DF%u\n", path, (unsigned int)unit);
+    puts("WARNING: a later restore command will destroy all data on the destination disk.");
+    result = ad_restore_preflight(path, unit, confirmation, &report);
+    if (result != AD_RESTORE_PREFLIGHT_OK) {
+        fprintf(stderr, "restore-preflight failed: %s", ad_restore_preflight_result_string(result));
+        if (report.adf_result != AD_ADF_OK) {
+            fprintf(stderr, " (%s)", ad_adf_result_string(report.adf_result));
+        } else if (report.destination_result != AD_TD_OK) {
+            fprintf(stderr, " (%s)", ad_td_result_string(report.destination_result));
+        }
+        fputc('\n', stderr);
+        puts("NO WRITE PERFORMED");
+        return 2;
+    }
+
+    printf("restore-preflight OK: source=%u bytes media=present write-protected=no change=%u\n",
+           (unsigned int)report.source_bytes,
+           (unsigned int)report.end_change_number);
+    puts("NO WRITE PERFORMED");
+    return 0;
+}
+
 static int command_qualify_media_change(ULONG unit)
 {
     AdTrackDisk disk;
@@ -341,6 +371,15 @@ int main(int argc, char **argv)
             return 1;
         }
         return command_verify_adf(unit, argv[3]);
+    }
+
+    if (argc == 5 && strcmp(argv[1], "restore-preflight") == 0 &&
+        parse_ulong(argv[3], &unit)) {
+        if (unit > 3UL) {
+            fprintf(stderr, "unit must be 0..3\n");
+            return 1;
+        }
+        return command_restore_preflight(argv[2], unit, argv[4]);
     }
 
     if (argc == 3 && strcmp(argv[1], "qualify-media-change") == 0 &&
