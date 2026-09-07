@@ -193,7 +193,7 @@ static int command_verify_adf(ULONG unit, const char *path)
 
     if (result == AD_VERIFY_MISMATCH) {
         fprintf(stderr,
-                "verify-adf mismatch: sectors=%u first=C%u H%u S%u byte=%u offset=%u disk=%02x adf=%02x\n",
+                "verify-adf data mismatch: sectors=%u first=C%u H%u S%u byte=%u offset=%u disk=%02x adf=%02x\n",
                 (unsigned int)report.mismatch_sectors,
                 (unsigned int)report.first_cylinder,
                 (unsigned int)report.first_head,
