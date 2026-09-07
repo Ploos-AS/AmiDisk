@@ -19,7 +19,7 @@ Read-only standard 880 KiB ADF backend: exact geometry/size validation, determin
 
 ## M3 - Copy, image and verify
 
-Controlled write paths introduced incrementally after M2 qualification.
+Controlled media workflows are introduced incrementally behind explicit qualification gates.
 
 ### M3.1 - Disk to ADF imaging
 
@@ -27,11 +27,15 @@ GREEN. DFx to newly-created standard ADF. Physical media remains read-only. Exis
 
 ### M3.2 - Verify
 
-Implemented, qualification pending. Compare physical disk and standard ADF sector-by-sector, count mismatching sectors, report the first differing CHS/byte/absolute offset and guard against source-media changes. Strictly read-only.
+GREEN. Physical disk and standard ADF are compared sector-by-sector with deterministic mismatch location, no-media handling and media-change protection. Visible FS-UAE runtime qualification complete. Strictly read-only.
 
-### M3.3 - ADF to disk restore
+### M3.3a - Restore safety preflight
 
-First physical-media write path, with write-protect handling, explicit destructive confirmation and post-write verification.
+Implemented, runtime qualification pending. Validates source ADF, destination media state, write protection, destination readability, exact confirmation and media-change stability. This phase remains strictly read-only and reports `NO WRITE PERFORMED`.
+
+### M3.3b - Restore engine
+
+Deferred until M3.3a is GREEN. This later phase will introduce the first physical-media modification path together with mandatory verification and additional safety gates.
 
 ### Later M3 work
 
