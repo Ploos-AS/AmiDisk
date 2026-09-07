@@ -55,4 +55,40 @@ Before M3.1 is called complete:
 
 ## Status
 
-IMPLEMENTED - native/runtime qualification pending.
+**M3.1 RUNTIME QUALIFICATION PASS** for the visible FS-UAE environment below.
+
+### Runtime qualification — 2026-09-07
+
+Visible FS-UAE 3.2.35, A500/Motorola 68000, Kickstart/Workbench 2.04 baseline.
+The known-good 880 KiB `original.adf` was mounted as DF0. Starting HEAD was
+`9a6c39159102c490c8b5904eb108d3a5f434ceba`.
+
+Observed guest results:
+
+| Test | Result |
+| --- | --- |
+| `AmiDisk --version` | PASS — `AmiDisk 0.3.0-m3.1` |
+| `AmiDisk probe 0` | PASS — `DF0: media=present write-protected=yes` |
+| imaging | PASS — `image-adf OK: sectors=1760 bytes=901120 change=0` |
+| `adf-info` generated image | PASS — standard geometry accepted |
+| sector C0/H0/S0 | PASS — `44 4f 53 00 e3 3d 0e 73 00 00 03 70 43 fa 00 3e` |
+| sector C10/H1/S5 | PASS — `00 00 00 08 00 00 00 e5 00 00 00 07 00 00 01 e8` |
+| existing destination | PASS — second imaging refused; original output remained unchanged |
+| M1/M2 regressions | PASS — probe, physical read-sector and adf-info |
+
+Host-side comparison of the copied source and generated image is byte-for-byte
+identical. Both SHA-256 hashes are
+`9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef`; size is
+901120 bytes. No crash, guru, or hang was observed in the completed runtime.
+
+No-media imaging was prepared in the same visible configuration but the second
+FS-UAE session did not reach the scripted shell output in this environment, so
+no runtime PASS is claimed for that case. The source control path was statically
+verified: `AD_IMAGE_ERR_NO_MEDIA` returns before destination creation, and all
+failure paths remove a partial output. The disk-change test was not deterministic
+to perform live during the long acquisition; no runtime PASS is claimed. Static
+inspection verifies the `TD_CHANGENUM` snapshot/compare and partial-file removal.
+
+The physical backend still contains no `CMD_WRITE`, `TD_FORMAT`, `ETD_WRITE`, or
+`ETD_FORMAT`. M3.1 writes only a new ordinary ADF using exclusive `O_EXCL`
+creation; existing destinations cannot be truncated.

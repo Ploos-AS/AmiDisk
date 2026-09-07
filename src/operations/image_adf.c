@@ -1,7 +1,9 @@
 #include "operations/image_adf.h"
 
 #include <stdio.h>
+#include <fcntl.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "io/adf/adf.h"
 
@@ -87,7 +89,15 @@ AdImageResult ad_image_disk_to_adf(ULONG unit, const char *path,
         report->start_change_number = start_change;
     }
 
-    output = fopen(path, "wb");
+    {
+        int output_fd;
+
+        output_fd = open(path, O_WRONLY | O_CREAT | O_EXCL, 0666);
+        output = (output_fd >= 0) ? fdopen(output_fd, "wb") : NULL;
+        if (output == NULL && output_fd >= 0) {
+            close(output_fd);
+        }
+    }
     if (output == NULL) {
         ad_td_close(&disk);
         return AD_IMAGE_ERR_DEST_OPEN;

@@ -19,7 +19,8 @@ for token in [
 
 for token in [
     'fopen(path, "rb")',
-    'fopen(path, "wb")',
+    "O_EXCL",
+    "fdopen(",
     "fwrite(",
     "remove(path)",
     "ad_td_read_sector",
