@@ -1,6 +1,6 @@
 # M3.3b Restore Engine runtime qualification
 
-Status: IN PROGRESS — final full restore and after-image proof pending.
+Status: M3.3b RUNTIME QUALIFICATION PASS.
 
 ## Environment and revisions
 
