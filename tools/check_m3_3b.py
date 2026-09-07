@@ -14,6 +14,16 @@ for token in ["ad_td_write_sector", "AD_TD_ERR_WRITE_PROTECTED"]:
     assert token in TRACKDISK_H, f"missing M3.3b trackdisk token: {token}"
 
 assert TRACKDISK.count("CMD_WRITE") == 1, "M3.3b permits exactly one physical write primitive"
+write_primitive = TRACKDISK.split("AdTdResult ad_td_write_sector(", 1)[1].split(
+    "const char *ad_td_result_string", 1)[0]
+write_pos = write_primitive.index("ad_td_do(disk, CMD_WRITE,")
+update_pos = write_primitive.index("ad_td_do(disk, CMD_UPDATE,")
+clear_pos = write_primitive.index("ad_td_do(disk, CMD_CLEAR,")
+assert write_pos < update_pos < clear_pos, "physical readback requires write, flush, invalidate"
+for begin, end in [(write_pos, update_pos), (update_pos, clear_pos)]:
+    assert "if (result != AD_TD_OK)" in write_primitive[begin:end]
+    assert "return result;" in write_primitive[begin:end], "stop on failed write/flush"
+assert TRACKDISK.count("CMD_UPDATE") == TRACKDISK.count("CMD_CLEAR") == 1
 for token in ["TD_FORMAT", "ETD_WRITE", "ETD_FORMAT"]:
     assert token not in TRACKDISK + RESTORE + MAIN, f"forbidden M3.3b write/format path: {token}"
 

@@ -185,7 +185,20 @@ AdTdResult ad_td_write_sector(AdTrackDisk *disk, ULONG cylinder, ULONG head,
     logical_sector = ((cylinder * AD_TD_HEADS) + head) * AD_TD_SECTORS_PER_TRACK + sector;
     offset = logical_sector * AD_TD_SECTOR_SIZE;
 
-    return ad_td_do(disk, CMD_WRITE, (APTR)buffer, AD_TD_SECTOR_SIZE, offset);
+    result = ad_td_do(disk, CMD_WRITE, (APTR)buffer, AD_TD_SECTOR_SIZE, offset);
+    if (result != AD_TD_OK) {
+        return result;
+    }
+
+    /* The write command only changes the track buffer. Flush it before invalidating
+     * the cache so the restore readback reads the destination media. Never
+     * discard the buffer after an unsuccessful update. */
+    result = ad_td_do(disk, CMD_UPDATE, NULL, 0, 0);
+    if (result != AD_TD_OK) {
+        return result;
+    }
+
+    return ad_td_do(disk, CMD_CLEAR, NULL, 0, 0);
 }
 
 const char *ad_td_result_string(AdTdResult result)
