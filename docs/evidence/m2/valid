@@ -1,0 +1,9 @@
+FailAt 21
+Echo "*E[0;0H*E[J"
+Assign LIBS: DF0:Libs
+Version
+Work:AmiDisk --version
+Work:AmiDisk adf-info Work:test.adf
+Work:AmiDisk adf-read-sector Work:test.adf 0 0 0
+Work:AmiDisk adf-read-sector Work:test.adf 10 1 5
+Echo "valid COMPLETE"

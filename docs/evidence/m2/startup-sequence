@@ -1,0 +1,6 @@
+C:Assign Work: SYS:
+C:Assign C: DF0:C
+FailAt 21
+Version
+Version DF0:Libs/version.library
+Echo "M2 READY"

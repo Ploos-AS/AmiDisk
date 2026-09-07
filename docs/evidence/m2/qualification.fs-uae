@@ -1,0 +1,16 @@
+[fs-uae]
+amiga_model = A500
+kickstart_file = /home/pgo/Documents/FS-UAE/Kickstarts/amiga-os-204.rom
+chip_memory = 1024
+slow_memory = 0
+fast_memory = 4096
+hard_drive_0 = /tmp/amidisk-m2/system
+hard_drive_0_label = System
+floppy_drive_count = 1
+floppy_drive_0 = /tmp/amidisk-m2/system/test.adf
+fullscreen = 0
+window_width = 960
+window_height = 720
+base_dir = /tmp/amidisk-m2/fs-uae
+hard_drive_0_priority = 10
+uae_floppy_write_protect = true

@@ -1,0 +1,6 @@
+FailAt 21
+Echo "*E[0;0H*E[J"
+Work:AmiDisk probe 0
+Work:AmiDisk read-sector 0 0 0 0
+Work:AmiDisk adf-read-sector Work:test.adf 0 0 0
+Echo "m1 COMPLETE"

@@ -1,0 +1,7 @@
+FailAt 21
+Echo "*E[0;0H*E[J"
+Work:AmiDisk adf-info Work:short.adf
+Work:AmiDisk adf-info Work:long.adf
+Work:AmiDisk adf-info Work:does-not-exist.adf
+Work:AmiDisk adf-read-sector Work:does-not-exist.adf 0 0 0
+Echo "sizes COMPLETE"

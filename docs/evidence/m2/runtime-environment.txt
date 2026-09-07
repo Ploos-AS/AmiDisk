@@ -1,0 +1,4 @@
+FS-UAE 3.2.35 (Built for Linux x86-64)
+set option "cpu_model" to "68000" (result: 1)
+set option "floppy_write_protect" to "true" (result: 1)
+CPU=68000, FPU=0, MMU=0, JIT=0. prefetch and cycle-exact 24-bit
