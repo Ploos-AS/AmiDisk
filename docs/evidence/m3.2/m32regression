@@ -1,0 +1,32 @@
+FailAt 21
+Echo "TEST reg-probe"
+AmiDisk >Work:m32-reg-probe.out probe 0
+Echo >Work:m32-reg-probe.rc "$RC"
+Type Work:m32-reg-probe.out
+Type Work:m32-reg-probe.rc
+Echo "TEST reg-sector"
+AmiDisk >Work:m32-reg-sector.out read-sector 0 0 0 0
+Echo >Work:m32-reg-sector.rc "$RC"
+Type Work:m32-reg-sector.out
+Type Work:m32-reg-sector.rc
+Echo "TEST reg-info"
+AmiDisk >Work:m32-reg-info.out adf-info Work:reference.adf
+Echo >Work:m32-reg-info.rc "$RC"
+Type Work:m32-reg-info.out
+Type Work:m32-reg-info.rc
+Echo "TEST reg-adf-sector"
+AmiDisk >Work:m32-reg-adf-sector.out adf-read-sector Work:reference.adf 0 0 0
+Echo >Work:m32-reg-adf-sector.rc "$RC"
+Type Work:m32-reg-adf-sector.out
+Type Work:m32-reg-adf-sector.rc
+Echo "TEST reg-image"
+AmiDisk >Work:m32-reg-image.out image-adf 0 Work:m32-regression.adf
+Echo >Work:m32-reg-image.rc "$RC"
+Type Work:m32-reg-image.out
+Type Work:m32-reg-image.rc
+Echo "TEST reg-image-info"
+AmiDisk >Work:m32-reg-image-info.out adf-info Work:m32-regression.adf
+Echo >Work:m32-reg-image-info.rc "$RC"
+Type Work:m32-reg-image-info.out
+Type Work:m32-reg-image-info.rc
+Echo "SCRIPT DONE"

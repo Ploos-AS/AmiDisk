@@ -1,0 +1,12 @@
+FailAt 21
+Echo "TEST no-media-probe"
+AmiDisk >Work:m32-no-media-probe.out probe 0
+Echo >Work:m32-no-media-probe.rc "$RC"
+Type Work:m32-no-media-probe.out
+Type Work:m32-no-media-probe.rc
+Echo "TEST no-media"
+AmiDisk >Work:m32-no-media.out verify-adf 0 Work:reference.adf
+Echo >Work:m32-no-media.rc "$RC"
+Type Work:m32-no-media.out
+Type Work:m32-no-media.rc
+Echo "SCRIPT DONE"

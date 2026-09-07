@@ -1,0 +1,26 @@
+{
+  "/tmp/amidisk-m32/original.adf": {
+    "size": 901120,
+    "sha256": "9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef"
+  },
+  "/tmp/amidisk-m32/Workbench2.0/reference.adf": {
+    "size": 901120,
+    "sha256": "9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef"
+  },
+  "/tmp/amidisk-m32/Workbench2.0/mismatch.adf": {
+    "size": 901120,
+    "sha256": "8cd325656374623d38d565450a25fc3231be207e2ac5ba87ad8429680bf4e993"
+  },
+  "/tmp/amidisk-m32/Workbench2.0/short.adf": {
+    "size": 901119,
+    "sha256": "9b0af5ae9b976646eb1135ceeb22ba9bdca7ceb96ee2e7574d3adafdea0d64b8"
+  },
+  "/tmp/amidisk-m32/Workbench2.0/long.adf": {
+    "size": 901121,
+    "sha256": "8b577061749dfdddae43e464dff57fa21b10e12995b9995da37f5e27d83fbe54"
+  },
+  "/tmp/amidisk-m32/Workbench2.0/AmiDisk": {
+    "size": 24332,
+    "sha256": "141cc4040b4dc1ae02ed38844583d9f605eef2abba4c2f6cc89d58a7c842e51e"
+  }
+}

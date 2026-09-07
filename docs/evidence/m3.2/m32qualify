@@ -1,0 +1,4 @@
+FailAt 21
+AmiDisk qualify-media-change 0
+Echo >Work:m32-qualify.rc "$RC"
+Type Work:m32-qualify.rc

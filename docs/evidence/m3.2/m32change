@@ -1,0 +1,7 @@
+FailAt 21
+AmiDisk >Work:m32-change-probe.out probe 0
+Type Work:m32-change-probe.out
+AmiDisk verify-adf 0 Work:reference.adf
+Echo >Work:m32-verify-change.rc "$RC"
+Type Work:m32-verify-change.rc
+Echo "VERIFY CHANGE RETURNED"

@@ -1,0 +1,18 @@
+amiga_model = A500
+cpu = 68000
+uae_floppy_write_protect = true
+Known ROM 'KS ROM v2.04 (A500+)' loaded
+gui_disk_image_change drive 0 name /tmp/amidisk-m32/original.adf write protected 1
+CPU=68000, FPU=0, MMU=0, JIT=0. prefetch and cycle-exact 24-bit
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+gui_disk_image_change drive 0 name /tmp/amidisk-m32/original.adf write protected 1
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+gui_disk_image_change drive 0 name /tmp/amidisk-m32/original.adf write protected 1
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+gui_disk_image_change drive 0 <no disk>
+gui_disk_image_change drive 0 name /tmp/amidisk-m32/original.adf write protected 1

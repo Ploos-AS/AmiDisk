@@ -1,0 +1,37 @@
+FailAt 21
+Echo "TEST version"
+AmiDisk >Work:m32-version.out --version
+Echo >Work:m32-version.rc "$RC"
+Type Work:m32-version.out
+Type Work:m32-version.rc
+Echo "TEST probe"
+AmiDisk >Work:m32-probe.out probe 0
+Echo >Work:m32-probe.rc "$RC"
+Type Work:m32-probe.out
+Type Work:m32-probe.rc
+Echo "TEST identical"
+AmiDisk >Work:m32-identical.out verify-adf 0 Work:reference.adf
+Echo >Work:m32-identical.rc "$RC"
+Type Work:m32-identical.out
+Type Work:m32-identical.rc
+Echo "TEST mismatch"
+AmiDisk >Work:m32-mismatch.out verify-adf 0 Work:mismatch.adf
+Echo >Work:m32-mismatch.rc "$RC"
+Type Work:m32-mismatch.out
+Type Work:m32-mismatch.rc
+Echo "TEST short"
+AmiDisk >Work:m32-short.out verify-adf 0 Work:short.adf
+Echo >Work:m32-short.rc "$RC"
+Type Work:m32-short.out
+Type Work:m32-short.rc
+Echo "TEST long"
+AmiDisk >Work:m32-long.out verify-adf 0 Work:long.adf
+Echo >Work:m32-long.rc "$RC"
+Type Work:m32-long.out
+Type Work:m32-long.rc
+Echo "TEST missing"
+AmiDisk >Work:m32-missing.out verify-adf 0 Work:does-not-exist.adf
+Echo >Work:m32-missing.rc "$RC"
+Type Work:m32-missing.out
+Type Work:m32-missing.rc
+Echo "SCRIPT DONE"
