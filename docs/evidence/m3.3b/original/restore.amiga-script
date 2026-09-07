@@ -1,0 +1,25 @@
+FailAt 21
+Echo "TEST ready"
+AmiDisk probe 0 >Work:ready.out
+Echo $RC >Work:ready.rc
+Type Work:ready.out
+Echo "RC:"
+Type Work:ready.rc
+Echo "TEST restore"
+AmiDisk restore-adf Work:restore-source.adf 0 ERASE-DF0 >Work:restore.out
+Echo $RC >Work:restore.rc
+Type Work:restore.out
+Echo "RC:"
+Type Work:restore.rc
+Echo "TEST immediate-verify"
+AmiDisk verify-adf 0 Work:restore-source.adf >Work:immediate-verify.out
+Echo $RC >Work:immediate-verify.rc
+Type Work:immediate-verify.out
+Echo "RC:"
+Type Work:immediate-verify.rc
+Echo "TEST after"
+AmiDisk image-adf 0 Work:m33b-after.adf >Work:after.out
+Echo $RC >Work:after.rc
+Type Work:after.out
+Echo "RC:"
+Type Work:after.rc

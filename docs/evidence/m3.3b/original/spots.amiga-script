@@ -1,0 +1,37 @@
+FailAt 21
+Echo "TEST adf-0-0-0"
+AmiDisk adf-read-sector Work:restore-source.adf 0 0 0 >Work:adf-0-0-0.out
+Echo $RC >Work:adf-0-0-0.rc
+Type Work:adf-0-0-0.out
+Echo "RC:"
+Type Work:adf-0-0-0.rc
+Echo "TEST disk-0-0-0"
+AmiDisk read-sector 0 0 0 0 >Work:disk-0-0-0.out
+Echo $RC >Work:disk-0-0-0.rc
+Type Work:disk-0-0-0.out
+Echo "RC:"
+Type Work:disk-0-0-0.rc
+Echo "TEST adf-10-1-5"
+AmiDisk adf-read-sector Work:restore-source.adf 10 1 5 >Work:adf-10-1-5.out
+Echo $RC >Work:adf-10-1-5.rc
+Type Work:adf-10-1-5.out
+Echo "RC:"
+Type Work:adf-10-1-5.rc
+Echo "TEST disk-10-1-5"
+AmiDisk read-sector 0 10 1 5 >Work:disk-10-1-5.out
+Echo $RC >Work:disk-10-1-5.rc
+Type Work:disk-10-1-5.out
+Echo "RC:"
+Type Work:disk-10-1-5.rc
+Echo "TEST adf-79-1-10"
+AmiDisk adf-read-sector Work:restore-source.adf 79 1 10 >Work:adf-79-1-10.out
+Echo $RC >Work:adf-79-1-10.rc
+Type Work:adf-79-1-10.out
+Echo "RC:"
+Type Work:adf-79-1-10.rc
+Echo "TEST disk-79-1-10"
+AmiDisk read-sector 0 79 1 10 >Work:disk-79-1-10.out
+Echo $RC >Work:disk-79-1-10.rc
+Type Work:disk-79-1-10.out
+Echo "RC:"
+Type Work:disk-79-1-10.rc

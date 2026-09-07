@@ -1,0 +1,31 @@
+FailAt 21
+Echo "TEST version"
+AmiDisk --version >Work:version.out
+Echo $RC >Work:version.rc
+Type Work:version.out
+Echo "RC:"
+Type Work:version.rc
+Echo "TEST info"
+AmiDisk adf-info Work:restore-source.adf >Work:info.out
+Echo $RC >Work:info.rc
+Type Work:info.out
+Echo "RC:"
+Type Work:info.rc
+Echo "TEST initial-probe"
+AmiDisk probe 0 >Work:initial-probe.out
+Echo $RC >Work:initial-probe.rc
+Type Work:initial-probe.out
+Echo "RC:"
+Type Work:initial-probe.rc
+Echo "TEST before"
+AmiDisk image-adf 0 Work:m33b-before.adf >Work:before.out
+Echo $RC >Work:before.rc
+Type Work:before.out
+Echo "RC:"
+Type Work:before.rc
+Echo "TEST pre-verify"
+AmiDisk verify-adf 0 Work:restore-source.adf >Work:pre-verify.out
+Echo $RC >Work:pre-verify.rc
+Type Work:pre-verify.out
+Echo "RC:"
+Type Work:pre-verify.rc

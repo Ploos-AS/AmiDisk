@@ -1,0 +1,78 @@
+FailAt 21
+Echo "TEST wrong"
+AmiDisk restore-adf Work:restore-source.adf 0 WRONG >Work:wrong.out
+Echo $RC >Work:wrong.rc
+Type Work:wrong.out
+Echo "RC:"
+Type Work:wrong.rc
+Wait 3
+Echo "TEST wrong-unit"
+AmiDisk restore-adf Work:restore-source.adf 0 ERASE-DF1 >Work:wrong-unit.out
+Echo $RC >Work:wrong-unit.rc
+Type Work:wrong-unit.out
+Echo "RC:"
+Type Work:wrong-unit.rc
+Wait 3
+Echo "TEST case"
+AmiDisk restore-adf Work:restore-source.adf 0 erase-df0 >Work:case.out
+Echo $RC >Work:case.rc
+Type Work:case.out
+Echo "RC:"
+Type Work:case.rc
+Wait 3
+Echo "TEST mixed"
+AmiDisk restore-adf Work:restore-source.adf 0 ERASE-df0 >Work:mixed.out
+Echo $RC >Work:mixed.rc
+Type Work:mixed.out
+Echo "RC:"
+Type Work:mixed.rc
+Wait 3
+Echo "TEST prefix"
+AmiDisk restore-adf Work:restore-source.adf 0 XERASE-DF0 >Work:prefix.out
+Echo $RC >Work:prefix.rc
+Type Work:prefix.out
+Echo "RC:"
+Type Work:prefix.rc
+Wait 3
+Echo "TEST suffix"
+AmiDisk restore-adf Work:restore-source.adf 0 ERASE-DF0X >Work:suffix.out
+Echo $RC >Work:suffix.rc
+Type Work:suffix.out
+Echo "RC:"
+Type Work:suffix.rc
+Wait 3
+Echo "TEST partial"
+AmiDisk restore-adf Work:restore-source.adf 0 ERASE-DF >Work:partial.out
+Echo $RC >Work:partial.rc
+Type Work:partial.out
+Echo "RC:"
+Type Work:partial.rc
+Wait 3
+Echo "TEST missing"
+AmiDisk restore-adf Work:does-not-exist.adf 0 ERASE-DF0 >Work:missing.out
+Echo $RC >Work:missing.rc
+Type Work:missing.out
+Echo "RC:"
+Type Work:missing.rc
+Wait 3
+Echo "TEST short"
+AmiDisk restore-adf Work:short.adf 0 ERASE-DF0 >Work:short.out
+Echo $RC >Work:short.rc
+Type Work:short.out
+Echo "RC:"
+Type Work:short.rc
+Wait 3
+Echo "TEST long"
+AmiDisk restore-adf Work:long.adf 0 ERASE-DF0 >Work:long.out
+Echo $RC >Work:long.rc
+Type Work:long.out
+Echo "RC:"
+Type Work:long.rc
+Wait 3
+Echo "TEST reject-image"
+AmiDisk image-adf 0 Work:reject-after.adf >Work:reject-image.out
+Echo $RC >Work:reject-image.rc
+Type Work:reject-image.out
+Echo "RC:"
+Type Work:reject-image.rc
+Wait 3

@@ -1,0 +1,21 @@
+{
+  "restore-source.adf": {
+    "bytes": 901120,
+    "sha256": "9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef"
+  },
+  "m33b-before.adf": {
+    "bytes": 901120,
+    "sha256": "3da86648e602f4e0916663d2b4893011423837b2f2b6885e421310338412c02a"
+  },
+  "m33b-after.adf": {
+    "bytes": 901120,
+    "sha256": "9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef"
+  },
+  "m33b-regression.adf": {
+    "bytes": 901120,
+    "sha256": "9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef"
+  },
+  "source_equals_after": true,
+  "before_differs_after": true,
+  "before_differs_source": true
+}

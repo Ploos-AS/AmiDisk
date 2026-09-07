@@ -1,0 +1,13 @@
+FailAt 21
+Echo "TEST empty-probe"
+AmiDisk probe 0 >Work:empty-probe.out
+Echo $RC >Work:empty-probe.rc
+Type Work:empty-probe.out
+Echo "RC:"
+Type Work:empty-probe.rc
+Echo "TEST empty-restore"
+AmiDisk restore-adf Work:restore-source.adf 0 ERASE-DF0 >Work:empty-restore.out
+Echo $RC >Work:empty-restore.rc
+Type Work:empty-restore.out
+Echo "RC:"
+Type Work:empty-restore.rc

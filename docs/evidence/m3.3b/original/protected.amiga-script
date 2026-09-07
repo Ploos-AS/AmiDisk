@@ -1,0 +1,13 @@
+FailAt 21
+Echo "TEST protected-probe"
+AmiDisk probe 0 >Work:protected-probe.out
+Echo $RC >Work:protected-probe.rc
+Type Work:protected-probe.out
+Echo "RC:"
+Type Work:protected-probe.rc
+Echo "TEST protected-restore"
+AmiDisk restore-adf Work:restore-source.adf 0 ERASE-DF0 >Work:protected-restore.out
+Echo $RC >Work:protected-restore.rc
+Type Work:protected-restore.out
+Echo "RC:"
+Type Work:protected-restore.rc

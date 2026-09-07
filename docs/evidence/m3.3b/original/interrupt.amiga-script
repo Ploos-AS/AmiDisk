@@ -1,0 +1,7 @@
+FailAt 21
+Echo "TEST interrupted"
+AmiDisk restore-adf Work:restore-source.adf 0 ERASE-DF0 >Work:interrupted.out
+Echo $RC >Work:interrupted.rc
+Type Work:interrupted.out
+Echo "RC:"
+Type Work:interrupted.rc

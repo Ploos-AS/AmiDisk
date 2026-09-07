@@ -1,0 +1,39 @@
+Audited revision: 4b57f8643408cb923de55de6e1c3fbf4e4a120cb
+
+src/io/adf/adf.c:30:     image->file = fopen(path, "rb");
+src/io/trackdisk/trackdisk.c:8: static AdTdResult ad_td_do(AdTrackDisk *disk, UWORD command, APTR data,
+src/io/trackdisk/trackdisk.c:92:     result = ad_td_do(disk, TD_CHANGESTATE, NULL, 0, 0);
+src/io/trackdisk/trackdisk.c:102:     result = ad_td_do(disk, TD_PROTSTATUS, NULL, 0, 0);
+src/io/trackdisk/trackdisk.c:119:     result = ad_td_do(disk, TD_CHANGENUM, NULL, 0, 0);
+src/io/trackdisk/trackdisk.c:153:     offset = logical_sector * AD_TD_SECTOR_SIZE;
+src/io/trackdisk/trackdisk.c:155:     return ad_td_do(disk, CMD_READ, buffer, AD_TD_SECTOR_SIZE, offset);
+src/io/trackdisk/trackdisk.c:158: AdTdResult ad_td_write_sector(AdTrackDisk *disk, ULONG cylinder, ULONG head,
+src/io/trackdisk/trackdisk.c:186:     offset = logical_sector * AD_TD_SECTOR_SIZE;
+src/io/trackdisk/trackdisk.c:188:     result = ad_td_do(disk, CMD_WRITE, (APTR)buffer, AD_TD_SECTOR_SIZE, offset);
+src/io/trackdisk/trackdisk.c:196:     result = ad_td_do(disk, CMD_UPDATE, NULL, 0, 0);
+src/io/trackdisk/trackdisk.c:201:     return ad_td_do(disk, CMD_CLEAR, NULL, 0, 0);
+src/io/trackdisk/trackdisk.h:7: #define AD_TD_SECTOR_SIZE 512UL
+src/io/trackdisk/trackdisk.h:11: #define AD_TD_DISK_BYTES (AD_TD_SECTOR_SIZE * AD_TD_SECTORS_PER_TRACK * AD_TD_HEADS * AD_TD_CYLINDERS)
+src/io/trackdisk/trackdisk.h:43: AdTdResult ad_td_write_sector(AdTrackDisk *disk, ULONG cylinder, ULONG head,
+src/main.c:85:     unsigned char buffer[AD_TD_SECTOR_SIZE];
+src/operations/image_adf.c:14:     file = fopen(path, "rb");
+src/operations/image_adf.c:38:     unsigned char buffer[AD_TD_SECTOR_SIZE];
+src/operations/image_adf.c:95:         output_fd = open(path, O_WRONLY | O_CREAT | O_EXCL, 0666);
+src/operations/image_adf.c:119:                 written = fwrite(buffer, 1U, (size_t)AD_TD_SECTOR_SIZE, output);
+src/operations/image_adf.c:120:                 if (written != (size_t)AD_TD_SECTOR_SIZE) {
+src/operations/image_adf.c:128:                     report->bytes_written += AD_TD_SECTOR_SIZE;
+src/operations/restore_adf.c:17:     unsigned char readback_buffer[AD_TD_SECTOR_SIZE];
+src/operations/restore_adf.c:86:     if (start_change != preflight_report.end_change_number) {
+src/operations/restore_adf.c:107:                 if (change_number != start_change) {
+src/operations/restore_adf.c:133:                 td_result = ad_td_write_sector(&disk, cylinder, head, sector,
+src/operations/restore_adf.c:148:                     report->bytes_written += AD_TD_SECTOR_SIZE;
+src/operations/restore_adf.c:165:                 if (memcmp(source_buffer, readback_buffer,
+src/operations/restore_adf.c:166:                            (size_t)AD_TD_SECTOR_SIZE) != 0) {
+src/operations/restore_adf.c:171:                         for (byte_index = 0UL; byte_index < AD_TD_SECTOR_SIZE;
+src/operations/restore_adf.c:201:                 if (change_number != start_change) {
+src/operations/restore_preflight.c:27:     unsigned char sector0[AD_TD_SECTOR_SIZE];
+src/operations/verify_adf.c:12:     return logical_sector * AD_TD_SECTOR_SIZE + byte_in_sector;
+src/operations/verify_adf.c:23:     unsigned char disk_buffer[AD_TD_SECTOR_SIZE];
+src/operations/verify_adf.c:114:                 if (memcmp(disk_buffer, adf_buffer,
+src/operations/verify_adf.c:115:                            (size_t)AD_TD_SECTOR_SIZE) != 0) {
+src/operations/verify_adf.c:118:                              byte_index < AD_TD_SECTOR_SIZE;
