@@ -31,11 +31,11 @@ GREEN. Physical disk and standard ADF are compared sector-by-sector with determi
 
 ### M3.3a - Restore safety preflight
 
-Implemented, runtime qualification pending. Validates source ADF, destination media state, write protection, destination readability, exact confirmation and media-change stability. This phase remains strictly read-only and reports `NO WRITE PERFORMED`.
+GREEN. Source ADF, destination media state, write protection, destination readability, exact confirmation and media-change stability are validated before restore. Visible FS-UAE runtime qualification complete; the preflight itself remains permanently read-only.
 
 ### M3.3b - Restore engine
 
-Deferred until M3.3a is GREEN. This later phase will introduce the first physical-media modification path together with mandatory verification and additional safety gates.
+Implemented, runtime qualification pending. Restores a standard ADF to writable DFx media through one guarded sector-write primitive. M3.3a preflight is mandatory, destination change-number is checked throughout the operation, and every written sector is immediately read back and compared before proceeding.
 
 ### Later M3 work
 
