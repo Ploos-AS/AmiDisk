@@ -28,6 +28,7 @@ AdVerifyResult ad_verify_disk_against_adf(ULONG unit, const char *path,
     ULONG byte_index;
     ULONG start_change;
     ULONG end_change;
+    ULONG mismatch_sectors = 0UL;
 
     if (report != NULL) {
         memset(report, 0, sizeof(*report));
@@ -112,26 +113,27 @@ AdVerifyResult ad_verify_disk_against_adf(ULONG unit, const char *path,
 
                 if (memcmp(disk_buffer, adf_buffer,
                            (size_t)AD_TD_SECTOR_SIZE) != 0) {
-                    if (report != NULL) {
-                        if (report->mismatch_sectors == 0UL) {
-                            for (byte_index = 0UL;
-                                 byte_index < AD_TD_SECTOR_SIZE;
-                                 ++byte_index) {
-                                if (disk_buffer[byte_index] != adf_buffer[byte_index]) {
-                                    report->first_cylinder = cylinder;
-                                    report->first_head = head;
-                                    report->first_sector = sector;
-                                    report->first_byte_in_sector = byte_index;
-                                    report->first_absolute_offset =
-                                        ad_verify_absolute_offset(cylinder, head,
-                                                                  sector, byte_index);
-                                    report->first_disk_byte = disk_buffer[byte_index];
-                                    report->first_adf_byte = adf_buffer[byte_index];
-                                    break;
-                                }
+                    if (mismatch_sectors == 0UL && report != NULL) {
+                        for (byte_index = 0UL;
+                             byte_index < AD_TD_SECTOR_SIZE;
+                             ++byte_index) {
+                            if (disk_buffer[byte_index] != adf_buffer[byte_index]) {
+                                report->first_cylinder = cylinder;
+                                report->first_head = head;
+                                report->first_sector = sector;
+                                report->first_byte_in_sector = byte_index;
+                                report->first_absolute_offset =
+                                    ad_verify_absolute_offset(cylinder, head,
+                                                              sector, byte_index);
+                                report->first_disk_byte = disk_buffer[byte_index];
+                                report->first_adf_byte = adf_buffer[byte_index];
+                                break;
                             }
                         }
-                        ++report->mismatch_sectors;
+                    }
+                    ++mismatch_sectors;
+                    if (report != NULL) {
+                        report->mismatch_sectors = mismatch_sectors;
                     }
                 }
             }
@@ -158,7 +160,7 @@ AdVerifyResult ad_verify_disk_against_adf(ULONG unit, const char *path,
         return AD_VERIFY_ERR_MEDIA_CHANGED;
     }
 
-    if (report != NULL && report->mismatch_sectors != 0UL) {
+    if (mismatch_sectors != 0UL) {
         return AD_VERIFY_MISMATCH;
     }
 
