@@ -1,0 +1,15 @@
+FailAt 21
+AmiDisk >Work:regression-probe.out probe 0
+Type Work:regression-probe.out
+AmiDisk >Work:regression-image.out image-adf 0 Work:m31a-regression.adf
+Echo >Work:regression-image-rc.out "$RC"
+Type Work:regression-image.out
+AmiDisk >Work:regression-info.out adf-info Work:m31a-regression.adf
+Type Work:regression-info.out
+AmiDisk >Work:regression-sector.out adf-read-sector Work:m31a-regression.adf 0 0 0
+Type Work:regression-sector.out
+AmiDisk >Work:m1-regression.out read-sector 0 0 0 0
+Type Work:m1-regression.out
+AmiDisk >Work:m2-regression.out adf-info Work:m31a-regression.adf
+Type Work:m2-regression.out
+Echo "REGRESSION RETURNED"

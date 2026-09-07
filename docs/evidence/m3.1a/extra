@@ -1,0 +1,16 @@
+FailAt 21
+AmiDisk image-adf 0 Work:m31a-regression.adf
+Echo >Work:existing-rc.out "$RC"
+AmiDisk >Work:nonzero-adf.out adf-read-sector Work:m31a-regression.adf 10 1 5
+Type Work:nonzero-adf.out
+AmiDisk >Work:nonzero-disk.out read-sector 0 10 1 5
+Type Work:nonzero-disk.out
+AmiDisk image-adf 1 Work:unavailable.adf
+Echo >Work:unavailable-rc.out "$RC"
+If EXISTS Work:unavailable.adf
+Echo >Work:unavailable-file.out "FAIL destination exists"
+Else
+Echo >Work:unavailable-file.out "PASS destination absent"
+EndIf
+Type Work:unavailable-file.out
+Echo "EXTRA TESTS RETURNED"

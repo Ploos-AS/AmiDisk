@@ -1,0 +1,5 @@
+Source and generated ADF: byte-for-byte identical
+Size: 901120 bytes; 1760 sectors of 512 bytes
+SHA-256 (both, also unchanged after existing-destination rejection): 9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef
+Work:no-media.adf: absent (also verified in guest)
+Work:unavailable.adf: absent (also verified in guest)

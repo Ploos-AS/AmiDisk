@@ -1,0 +1,14 @@
+FailAt 21
+AmiDisk >Work:no-media-probe.out probe 0
+Type Work:no-media-probe.out
+AmiDisk image-adf 0 Work:no-media.adf
+Echo >Work:no-media-rc.out "$RC"
+Type Work:no-media-rc.out
+List Work:no-media.adf
+If EXISTS Work:no-media.adf
+Echo >Work:no-output-check.out "FAIL destination exists"
+Else
+Echo >Work:no-output-check.out "PASS Work:no-media.adf does not exist"
+EndIf
+Type Work:no-output-check.out
+Echo "NO MEDIA TEST RETURNED"

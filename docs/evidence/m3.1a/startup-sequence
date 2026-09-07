@@ -1,0 +1,10 @@
+C:Assign Work: SYS:
+C:Assign T: RAM:
+C:FailAt 21
+C:Version >Work:environment.out
+C:Type Work:environment.out
+AmiDisk >Work:version.out --version
+C:Type Work:version.out
+AmiDisk >Work:initial-probe.out probe 0
+C:Type Work:initial-probe.out
+AmiDisk qualify-media-change 0
