@@ -41,8 +41,10 @@ for token in [
 
 assert COPY.count("ad_td_write_sector(&destination") == 1, \
     "M3.4 must use one call site to the qualified sector-write primitive"
-assert COPY.count("ad_td_get_change_number") >= 4, \
-    "M3.4 must guard both source and destination media changes"
+assert COPY.count("ad_td_get_change_number") == 2, \
+    "M3.4 change helper must read source and destination change numbers"
+assert COPY.count("ad_copy_check_changes(") >= 4, \
+    "M3.4 must check both media before/after destructive sector cycles"
 
 for token in ["CMD_WRITE", "CMD_UPDATE", "CMD_CLEAR", "TD_FORMAT", "ETD_WRITE", "ETD_FORMAT"]:
     assert token not in COPY, f"M3.4 must not bypass the qualified trackdisk write primitive: {token}"
