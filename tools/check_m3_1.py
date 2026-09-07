@@ -34,6 +34,9 @@ for token in [
 assert "TD_CHANGENUM" in TRACKDISK, "M3.1 requires trackdisk change-number guard"
 assert "ad_td_get_change_number" in TRACKDISK_H, "change-number API missing"
 assert "image-adf" in MAIN, "M3.1 CLI command missing"
+assert "qualify-media-change" in MAIN, "M3.1a interactive qualifier missing"
+assert "Eject or swap the disk in FS-UAE now" in MAIN, "M3.1a visible-runtime instruction missing"
+assert "after_change == before_change" in MAIN, "M3.1a change-number assertion missing"
 assert "src/operations/image_adf.c" in MAKEFILE, "imaging source missing from native build"
 assert "tools/check_m3_1.py" in MAKEFILE, "M3.1 static check missing from make check"
 
