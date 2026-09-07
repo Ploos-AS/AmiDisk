@@ -5,6 +5,7 @@
 #include "core/ad_version.h"
 #include "io/adf/adf.h"
 #include "io/trackdisk/trackdisk.h"
+#include "operations/image_adf.h"
 
 static void usage(const char *program)
 {
@@ -14,6 +15,7 @@ static void usage(const char *program)
     printf("  %s read-sector <unit> <cylinder> <head> <sector>\n", program);
     printf("  %s adf-info <path>\n", program);
     printf("  %s adf-read-sector <path> <cylinder> <head> <sector>\n", program);
+    printf("  %s image-adf <unit> <path>\n", program);
 }
 
 static int parse_ulong(const char *text, ULONG *value)
@@ -149,6 +151,29 @@ static int command_adf_read_sector(const char *path, ULONG cylinder,
     return result == AD_ADF_OK ? 0 : 2;
 }
 
+static int command_image_adf(ULONG unit, const char *path)
+{
+    AdImageReport report;
+    AdImageResult result;
+
+    printf("Imaging DF%u: -> %s\n", (unsigned int)unit, path);
+    result = ad_image_disk_to_adf(unit, path, &report);
+    if (result != AD_IMAGE_OK) {
+        fprintf(stderr, "image-adf failed: %s", ad_image_result_string(result));
+        if (report.source_result != AD_TD_OK) {
+            fprintf(stderr, " (%s)", ad_td_result_string(report.source_result));
+        }
+        fputc('\n', stderr);
+        return 2;
+    }
+
+    printf("image-adf OK: sectors=%u bytes=%u change=%u\n",
+           (unsigned int)report.sectors_written,
+           (unsigned int)report.bytes_written,
+           (unsigned int)report.end_change_number);
+    return 0;
+}
+
 int main(int argc, char **argv)
 {
     ULONG unit;
@@ -188,6 +213,14 @@ int main(int argc, char **argv)
         parse_ulong(argv[3], &cylinder) && parse_ulong(argv[4], &head) &&
         parse_ulong(argv[5], &sector)) {
         return command_adf_read_sector(argv[2], cylinder, head, sector);
+    }
+
+    if (argc == 4 && strcmp(argv[1], "image-adf") == 0 && parse_ulong(argv[2], &unit)) {
+        if (unit > 3UL) {
+            fprintf(stderr, "unit must be 0..3\n");
+            return 1;
+        }
+        return command_image_adf(unit, argv[3]);
     }
 
     usage(argv[0]);
