@@ -35,11 +35,15 @@ GREEN. Source ADF, destination media state, write protection, destination readab
 
 ### M3.3b - Restore engine
 
-Implemented, runtime qualification pending. Restores a standard ADF to writable DFx media through one guarded sector-write primitive. M3.3a preflight is mandatory, destination change-number is checked throughout the operation, and every written sector is immediately read back and compared before proceeding.
+GREEN. Standard ADF to writable DFx restore through one guarded sector-write primitive. Visible FS-UAE runtime qualification complete. Every physical write is flushed with `CMD_UPDATE`, the track cache is invalidated with `CMD_CLEAR`, and the sector is immediately read back and compared. Exact confirmation, write protection, no-media handling and destination media-change guards are qualified.
+
+### M3.4 - Disk to disk copy
+
+Implemented, runtime qualification pending. Copies a standard Amiga DD disk from one physical DFx unit to a different DFy unit. Destination overwrite requires exact `ERASE-DFy` confirmation. Source and destination media-change numbers are guarded throughout the operation, the M3.3b qualified sector-write primitive is reused unchanged, and every destination sector is immediately read back and compared before proceeding.
 
 ### Later M3 work
 
-DFx-to-DFy copy, disk-to-RAM-to-disk, per-track state and additional copy workflows.
+Disk-to-RAM-to-disk, per-track state and additional copy workflows.
 
 ## M4 - Recovery
 
