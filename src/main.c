@@ -5,6 +5,7 @@
 #include "core/ad_version.h"
 #include "io/adf/adf.h"
 #include "io/trackdisk/trackdisk.h"
+#include "operations/copy_disk.h"
 #include "operations/image_adf.h"
 #include "operations/restore_adf.h"
 #include "operations/restore_preflight.h"
@@ -22,6 +23,7 @@ static void usage(const char *program)
     printf("  %s verify-adf <unit> <path>\n", program);
     printf("  %s restore-preflight <path> <unit> <ERASE-DFn>\n", program);
     printf("  %s restore-adf <path> <unit> <ERASE-DFn>\n", program);
+    printf("  %s copy-disk <source-unit> <destination-unit> <ERASE-DFn>\n", program);
     printf("  %s qualify-media-change <unit>\n", program);
 }
 
@@ -290,6 +292,51 @@ static int command_restore_adf(const char *path, ULONG unit,
     return 0;
 }
 
+static int command_copy_disk(ULONG source_unit, ULONG destination_unit,
+                             const char *confirmation)
+{
+    AdCopyDiskReport report;
+    AdCopyDiskResult result;
+
+    printf("COPY: DF%u -> DF%u\n", (unsigned int)source_unit,
+           (unsigned int)destination_unit);
+    puts("WARNING: this command overwrites the destination disk.");
+    result = ad_copy_disk(source_unit, destination_unit, confirmation, &report);
+    if (result != AD_COPY_DISK_OK) {
+        fprintf(stderr,
+                "copy-disk failed: %s after read=%u written=%u verified=%u at C%u H%u S%u",
+                ad_copy_disk_result_string(result),
+                (unsigned int)report.sectors_read,
+                (unsigned int)report.sectors_written,
+                (unsigned int)report.sectors_verified,
+                (unsigned int)report.failure_cylinder,
+                (unsigned int)report.failure_head,
+                (unsigned int)report.failure_sector);
+        if (report.source_result != AD_TD_OK) {
+            fprintf(stderr, " (source: %s)", ad_td_result_string(report.source_result));
+        } else if (report.destination_result != AD_TD_OK) {
+            fprintf(stderr, " (destination: %s)",
+                    ad_td_result_string(report.destination_result));
+        } else if (result == AD_COPY_DISK_ERR_VERIFY) {
+            fprintf(stderr, " byte=%u expected=%02x actual=%02x",
+                    (unsigned int)report.failure_byte,
+                    (unsigned int)report.expected_byte,
+                    (unsigned int)report.actual_byte);
+        }
+        fputc('\n', stderr);
+        return 2;
+    }
+
+    printf("copy-disk OK: sectors-read=%u sectors-written=%u sectors-verified=%u bytes=%u source-change=%u destination-change=%u\n",
+           (unsigned int)report.sectors_read,
+           (unsigned int)report.sectors_written,
+           (unsigned int)report.sectors_verified,
+           (unsigned int)report.bytes_written,
+           (unsigned int)report.source_end_change_number,
+           (unsigned int)report.destination_end_change_number);
+    return 0;
+}
+
 static int command_qualify_media_change(ULONG unit)
 {
     AdTrackDisk disk;
@@ -364,6 +411,8 @@ static int command_qualify_media_change(ULONG unit)
 int main(int argc, char **argv)
 {
     ULONG unit;
+    ULONG source_unit;
+    ULONG destination_unit;
     ULONG cylinder;
     ULONG head;
     ULONG sector;
@@ -434,6 +483,20 @@ int main(int argc, char **argv)
             return 1;
         }
         return command_restore_adf(argv[2], unit, argv[4]);
+    }
+
+    if (argc == 5 && strcmp(argv[1], "copy-disk") == 0 &&
+        parse_ulong(argv[2], &source_unit) &&
+        parse_ulong(argv[3], &destination_unit)) {
+        if (source_unit > 3UL || destination_unit > 3UL) {
+            fprintf(stderr, "source and destination units must be 0..3\n");
+            return 1;
+        }
+        if (source_unit == destination_unit) {
+            fprintf(stderr, "source and destination units must differ\n");
+            return 1;
+        }
+        return command_copy_disk(source_unit, destination_unit, argv[4]);
     }
 
     if (argc == 3 && strcmp(argv[1], "qualify-media-change") == 0 &&
