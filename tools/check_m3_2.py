@@ -42,9 +42,10 @@ for token in [
 ]:
     assert token not in VERIFY, f"M3.2 verify must remain read-only: {token}"
 
-all_physical = "\n".join([TRACKDISK, VERIFY, MAIN])
-for token in ["CMD_WRITE", "TD_FORMAT", "ETD_WRITE", "ETD_FORMAT"]:
-    assert token not in all_physical, f"physical write/format forbidden before M3.3: {token}"
+# M3.2 itself remains strictly read-only. Later milestones may add physical
+# restore support to the shared trackdisk backend and CLI, so do not reject
+# write tokens merely because they exist elsewhere in the program.
+assert "ad_td_write_sector" not in VERIFY, "M3.2 verify must not call physical write API"
 
 assert 'fopen(path, "rb")' in ADF, "ADF backend must remain read-only for verify"
 assert 512 * 11 * 2 * 80 == 901120
