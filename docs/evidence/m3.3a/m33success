@@ -1,0 +1,17 @@
+FailAt 21
+Echo "TEST writable-probe"
+AmiDisk >Work:m33a-writable-probe.out probe 0
+Echo >Work:m33a-writable-probe.rc "$RC"
+Type Work:m33a-writable-probe.out
+Type Work:m33a-writable-probe.rc
+Echo "TEST success"
+AmiDisk >Work:m33a-success.out restore-preflight Work:reference.adf 0 ERASE-DF0
+Echo >Work:m33a-success.rc "$RC"
+Type Work:m33a-success.out
+Type Work:m33a-success.rc
+Echo "TEST after"
+AmiDisk >Work:m33a-after.out image-adf 0 Work:m33a-after.adf
+Echo >Work:m33a-after.rc "$RC"
+Type Work:m33a-after.out
+Type Work:m33a-after.rc
+Echo "SCRIPT DONE"

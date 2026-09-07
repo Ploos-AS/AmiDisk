@@ -1,0 +1,12 @@
+FailAt 21
+Echo "TEST empty-probe"
+AmiDisk >Work:m33a-empty-probe.out probe 0
+Echo >Work:m33a-empty-probe.rc "$RC"
+Type Work:m33a-empty-probe.out
+Type Work:m33a-empty-probe.rc
+Echo "TEST empty"
+AmiDisk >Work:m33a-empty.out restore-preflight Work:reference.adf 0 ERASE-DF0
+Echo >Work:m33a-empty.rc "$RC"
+Type Work:m33a-empty.out
+Type Work:m33a-empty.rc
+Echo "SCRIPT DONE"

@@ -1,0 +1,22 @@
+FailAt 21
+Echo "TEST version"
+AmiDisk >Work:m33a-version.out --version
+Echo >Work:m33a-version.rc "$RC"
+Type Work:m33a-version.out
+Type Work:m33a-version.rc
+Echo "TEST initial-probe"
+AmiDisk >Work:m33a-initial-probe.out probe 0
+Echo >Work:m33a-initial-probe.rc "$RC"
+Type Work:m33a-initial-probe.out
+Type Work:m33a-initial-probe.rc
+Echo "TEST initial-sector"
+AmiDisk >Work:m33a-initial-sector.out read-sector 0 0 0 0
+Echo >Work:m33a-initial-sector.rc "$RC"
+Type Work:m33a-initial-sector.out
+Type Work:m33a-initial-sector.rc
+Echo "TEST before"
+AmiDisk >Work:m33a-before.out image-adf 0 Work:m33a-before.adf
+Echo >Work:m33a-before.rc "$RC"
+Type Work:m33a-before.out
+Type Work:m33a-before.rc
+Echo "SCRIPT DONE"

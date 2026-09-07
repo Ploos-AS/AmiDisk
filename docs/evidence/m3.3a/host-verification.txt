@@ -1,0 +1,22 @@
+rm -f src/main.o src/core/ad_version.o src/io/trackdisk/trackdisk.o src/io/adf/adf.o src/operations/image_adf.o src/operations/verify_adf.o src/operations/restore_preflight.o AmiDisk
+python3 tools/check_repo.py
+M0 repository checks: PASS
+python3 tools/check_m1.py
+M1 static checks: PASS
+python3 tools/check_m2.py
+M2 static checks: PASS
+python3 tools/check_m3_1.py
+M3.1 static checks: PASS
+python3 tools/check_m3_2.py
+M3.2 static checks: PASS
+python3 tools/check_m3_3a.py
+M3.3a static checks: PASS
+m68k-amigaos-gcc -Isrc -Os -Wall -Wextra -Werror -m68000 -noixemul -c -o src/main.o src/main.c
+m68k-amigaos-gcc -Isrc -Os -Wall -Wextra -Werror -m68000 -noixemul -c -o src/core/ad_version.o src/core/ad_version.c
+m68k-amigaos-gcc -Isrc -Os -Wall -Wextra -Werror -m68000 -noixemul -c -o src/io/trackdisk/trackdisk.o src/io/trackdisk/trackdisk.c
+m68k-amigaos-gcc -Isrc -Os -Wall -Wextra -Werror -m68000 -noixemul -c -o src/io/adf/adf.o src/io/adf/adf.c
+m68k-amigaos-gcc -Isrc -Os -Wall -Wextra -Werror -m68000 -noixemul -c -o src/operations/image_adf.o src/operations/image_adf.c
+m68k-amigaos-gcc -Isrc -Os -Wall -Wextra -Werror -m68000 -noixemul -c -o src/operations/verify_adf.o src/operations/verify_adf.c
+m68k-amigaos-gcc -Isrc -Os -Wall -Wextra -Werror -m68000 -noixemul -c -o src/operations/restore_preflight.o src/operations/restore_preflight.c
+m68k-amigaos-gcc -noixemul -o AmiDisk src/main.o src/core/ad_version.o src/io/trackdisk/trackdisk.o src/io/adf/adf.o src/operations/image_adf.o src/operations/verify_adf.o src/operations/restore_preflight.o
+AmiDisk: AmigaOS loadseg()ble executable/binary

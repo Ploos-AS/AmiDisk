@@ -1,0 +1,32 @@
+FailAt 21
+Echo "TEST reg-probe"
+AmiDisk >Work:m33a-reg-probe.out probe 0
+Echo >Work:m33a-reg-probe.rc "$RC"
+Type Work:m33a-reg-probe.out
+Type Work:m33a-reg-probe.rc
+Echo "TEST reg-sector"
+AmiDisk >Work:m33a-reg-sector.out read-sector 0 0 0 0
+Echo >Work:m33a-reg-sector.rc "$RC"
+Type Work:m33a-reg-sector.out
+Type Work:m33a-reg-sector.rc
+Echo "TEST reg-info"
+AmiDisk >Work:m33a-reg-info.out adf-info Work:reference.adf
+Echo >Work:m33a-reg-info.rc "$RC"
+Type Work:m33a-reg-info.out
+Type Work:m33a-reg-info.rc
+Echo "TEST reg-adf-sector"
+AmiDisk >Work:m33a-reg-adf-sector.out adf-read-sector Work:reference.adf 0 0 0
+Echo >Work:m33a-reg-adf-sector.rc "$RC"
+Type Work:m33a-reg-adf-sector.out
+Type Work:m33a-reg-adf-sector.rc
+Echo "TEST reg-verify"
+AmiDisk >Work:m33a-reg-verify.out verify-adf 0 Work:reference.adf
+Echo >Work:m33a-reg-verify.rc "$RC"
+Type Work:m33a-reg-verify.out
+Type Work:m33a-reg-verify.rc
+Echo "TEST reg-image"
+AmiDisk >Work:m33a-reg-image.out image-adf 0 Work:m33a-regression.adf
+Echo >Work:m33a-reg-image.rc "$RC"
+Type Work:m33a-reg-image.out
+Type Work:m33a-reg-image.rc
+Echo "SCRIPT DONE"

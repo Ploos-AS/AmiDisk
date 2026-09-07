@@ -1,0 +1,18 @@
+protected
+FS-UAE 3.2.35 (Built for Linux x86-64)
+cpu = 68000
+floppy_drive_0 = /tmp/amidisk-m33a/test.adf
+hard_drive_0 = /tmp/amidisk-m33a/Workbench2.0
+kickstart_file = /home/pgo/Documents/FS-UAE/Kickstarts/amiga-os-204.rom
+uae_floppy_write_protect = true
+set option "floppy_write_protect" to "true" (result: 1)
+CPU=68000, FPU=0, MMU=0, JIT=0. prefetch and cycle-exact 24-bit
+writable
+FS-UAE 3.2.35 (Built for Linux x86-64)
+cpu = 68000
+floppy_drive_0 = /tmp/amidisk-m33a/test.adf
+hard_drive_0 = /tmp/amidisk-m33a/Workbench2.0
+kickstart_file = /home/pgo/Documents/FS-UAE/Kickstarts/amiga-os-204.rom
+uae_floppy_write_protect = false
+set option "floppy_write_protect" to "false" (result: 1)
+CPU=68000, FPU=0, MMU=0, JIT=0. prefetch and cycle-exact 24-bit

@@ -1,0 +1,10 @@
+Source inspection and host assertions: PASS
+Forbidden physical write/format tokens in src: zero matches.
+All trackdisk DoIO call sites: CMD_READ, TD_CHANGESTATE, TD_PROTSTATUS, TD_CHANGENUM.
+Preflight uses exact strcmp; source validation precedes device open.
+Preflight reads sector 0 between start/end TD_CHANGENUM; unequal numbers reject success.
+ADF opens rb only. No preflight file write, format or sector write.
+M3.1 O_WRONLY | O_CREAT | O_EXCL intact.
+Image/ADF/trackdisk implementations unchanged since qualified M3.1a 087900c3d0e0b7955397f66ca19142e199a46727.
+CLI unit >3 rejects before command/device dispatch.
+Documentation and static-check lists mention forbidden names; production source does not.

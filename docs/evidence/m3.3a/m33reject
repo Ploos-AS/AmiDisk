@@ -1,0 +1,86 @@
+FailAt 21
+Wait 2 SEC
+Echo "TEST wrong"
+AmiDisk >Work:m33a-wrong.out restore-preflight Work:reference.adf 0 WRONG
+Echo >Work:m33a-wrong.rc "$RC"
+Type Work:m33a-wrong.out
+Type Work:m33a-wrong.rc
+Wait 2 SEC
+Echo "TEST wrong-unit"
+AmiDisk >Work:m33a-wrong-unit.out restore-preflight Work:reference.adf 0 ERASE-DF1
+Echo >Work:m33a-wrong-unit.rc "$RC"
+Type Work:m33a-wrong-unit.out
+Type Work:m33a-wrong-unit.rc
+Wait 2 SEC
+Echo "TEST lower"
+AmiDisk >Work:m33a-lower.out restore-preflight Work:reference.adf 0 erase-df0
+Echo >Work:m33a-lower.rc "$RC"
+Type Work:m33a-lower.out
+Type Work:m33a-lower.rc
+Wait 2 SEC
+Echo "TEST mixed"
+AmiDisk >Work:m33a-mixed.out restore-preflight Work:reference.adf 0 ERASE-df0
+Echo >Work:m33a-mixed.rc "$RC"
+Type Work:m33a-mixed.out
+Type Work:m33a-mixed.rc
+Wait 2 SEC
+Echo "TEST prefix"
+AmiDisk >Work:m33a-prefix.out restore-preflight Work:reference.adf 0 XERASE-DF0
+Echo >Work:m33a-prefix.rc "$RC"
+Type Work:m33a-prefix.out
+Type Work:m33a-prefix.rc
+Wait 2 SEC
+Echo "TEST suffix"
+AmiDisk >Work:m33a-suffix.out restore-preflight Work:reference.adf 0 ERASE-DF0X
+Echo >Work:m33a-suffix.rc "$RC"
+Type Work:m33a-suffix.out
+Type Work:m33a-suffix.rc
+Wait 2 SEC
+Echo "TEST partial"
+AmiDisk >Work:m33a-partial.out restore-preflight Work:reference.adf 0 ERASE-DF
+Echo >Work:m33a-partial.rc "$RC"
+Type Work:m33a-partial.out
+Type Work:m33a-partial.rc
+Wait 2 SEC
+Echo "TEST missing"
+AmiDisk >Work:m33a-missing.out restore-preflight Work:does-not-exist.adf 0 ERASE-DF0
+Echo >Work:m33a-missing.rc "$RC"
+Type Work:m33a-missing.out
+Type Work:m33a-missing.rc
+Wait 2 SEC
+Echo "TEST short"
+AmiDisk >Work:m33a-short.out restore-preflight Work:short.adf 0 ERASE-DF0
+Echo >Work:m33a-short.rc "$RC"
+Type Work:m33a-short.out
+Type Work:m33a-short.rc
+Wait 2 SEC
+Echo "TEST long"
+AmiDisk >Work:m33a-long.out restore-preflight Work:long.adf 0 ERASE-DF0
+Echo >Work:m33a-long.rc "$RC"
+Type Work:m33a-long.out
+Type Work:m33a-long.rc
+Wait 2 SEC
+Echo "TEST unit4"
+AmiDisk >Work:m33a-unit4.out restore-preflight Work:reference.adf 4 ERASE-DF4
+Echo >Work:m33a-unit4.rc "$RC"
+Type Work:m33a-unit4.out
+Type Work:m33a-unit4.rc
+Wait 2 SEC
+Echo "TEST df1"
+AmiDisk >Work:m33a-df1.out restore-preflight Work:reference.adf 1 ERASE-DF1
+Echo >Work:m33a-df1.rc "$RC"
+Type Work:m33a-df1.out
+Type Work:m33a-df1.rc
+Wait 2 SEC
+Echo "TEST wp-probe"
+AmiDisk >Work:m33a-wp-probe.out probe 0
+Echo >Work:m33a-wp-probe.rc "$RC"
+Type Work:m33a-wp-probe.out
+Type Work:m33a-wp-probe.rc
+Wait 2 SEC
+Echo "TEST wp"
+AmiDisk >Work:m33a-wp.out restore-preflight Work:reference.adf 0 ERASE-DF0
+Echo >Work:m33a-wp.rc "$RC"
+Type Work:m33a-wp.out
+Type Work:m33a-wp.rc
+Echo "SCRIPT DONE"

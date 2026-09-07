@@ -1,0 +1,4 @@
+FailAt 21
+AmiDisk qualify-media-change 0
+Echo >Work:m33a-change.rc "$RC"
+Type Work:m33a-change.rc
