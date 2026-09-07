@@ -18,7 +18,8 @@ typedef enum AdTdResult {
     AD_TD_ERR_OPEN = -4,
     AD_TD_ERR_IO = -5,
     AD_TD_ERR_NO_MEDIA = -6,
-    AD_TD_ERR_RANGE = -7
+    AD_TD_ERR_RANGE = -7,
+    AD_TD_ERR_WRITE_PROTECTED = -8
 } AdTdResult;
 
 typedef struct AdTrackDisk {
@@ -39,6 +40,8 @@ AdTdResult ad_td_get_status(AdTrackDisk *disk, AdTdStatus *status);
 AdTdResult ad_td_get_change_number(AdTrackDisk *disk, ULONG *change_number);
 AdTdResult ad_td_read_sector(AdTrackDisk *disk, ULONG cylinder, ULONG head,
                              ULONG sector, void *buffer);
+AdTdResult ad_td_write_sector(AdTrackDisk *disk, ULONG cylinder, ULONG head,
+                              ULONG sector, const void *buffer);
 const char *ad_td_result_string(AdTdResult result);
 
 #endif
