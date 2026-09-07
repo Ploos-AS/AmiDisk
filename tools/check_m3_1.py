@@ -40,9 +40,11 @@ assert "after_change == before_change" in MAIN, "M3.1a change-number assertion m
 assert "src/operations/image_adf.c" in MAKEFILE, "imaging source missing from native build"
 assert "tools/check_m3_1.py" in MAKEFILE, "M3.1 static check missing from make check"
 
-all_native = "\n".join([TRACKDISK, IMAGING, MAIN])
+# M3.1 itself must remain non-destructive to physical media. Later milestones
+# may legitimately extend the shared trackdisk backend and CLI with restore
+# support, so scope this prohibition to the M3.1 imaging implementation.
 for token in ["CMD_WRITE", "TD_FORMAT", "ETD_WRITE", "ETD_FORMAT"]:
-    assert token not in all_native, f"physical-media write/format remains forbidden in M3.1: {token}"
+    assert token not in IMAGING, f"M3.1 imaging path must not use physical write/format: {token}"
 
 assert "AD_TD_DISK_BYTES" in TRACKDISK_H
 assert 512 * 11 * 2 * 80 == 901120
