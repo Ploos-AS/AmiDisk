@@ -6,6 +6,7 @@
 #include "io/adf/adf.h"
 #include "io/trackdisk/trackdisk.h"
 #include "operations/image_adf.h"
+#include "operations/verify_adf.h"
 
 static void usage(const char *program)
 {
@@ -16,6 +17,7 @@ static void usage(const char *program)
     printf("  %s adf-info <path>\n", program);
     printf("  %s adf-read-sector <path> <cylinder> <head> <sector>\n", program);
     printf("  %s image-adf <unit> <path>\n", program);
+    printf("  %s verify-adf <unit> <path>\n", program);
     printf("  %s qualify-media-change <unit>\n", program);
 }
 
@@ -175,6 +177,44 @@ static int command_image_adf(ULONG unit, const char *path)
     return 0;
 }
 
+static int command_verify_adf(ULONG unit, const char *path)
+{
+    AdVerifyReport report;
+    AdVerifyResult result;
+
+    printf("Verifying DF%u: against %s\n", (unsigned int)unit, path);
+    result = ad_verify_disk_against_adf(unit, path, &report);
+    if (result == AD_VERIFY_OK) {
+        printf("verify-adf OK: identical sectors=%u change=%u\n",
+               (unsigned int)report.sectors_compared,
+               (unsigned int)report.end_change_number);
+        return 0;
+    }
+
+    if (result == AD_VERIFY_MISMATCH) {
+        fprintf(stderr,
+                "verify-adf mismatch: sectors=%u first=C%u H%u S%u byte=%u offset=%u disk=%02x adf=%02x\n",
+                (unsigned int)report.mismatch_sectors,
+                (unsigned int)report.first_cylinder,
+                (unsigned int)report.first_head,
+                (unsigned int)report.first_sector,
+                (unsigned int)report.first_byte_in_sector,
+                (unsigned int)report.first_absolute_offset,
+                (unsigned int)report.first_disk_byte,
+                (unsigned int)report.first_adf_byte);
+        return 3;
+    }
+
+    fprintf(stderr, "verify-adf failed: %s", ad_verify_result_string(result));
+    if (report.source_result != AD_TD_OK) {
+        fprintf(stderr, " (%s)", ad_td_result_string(report.source_result));
+    } else if (report.adf_result != AD_ADF_OK) {
+        fprintf(stderr, " (%s)", ad_adf_result_string(report.adf_result));
+    }
+    fputc('\n', stderr);
+    return 2;
+}
+
 static int command_qualify_media_change(ULONG unit)
 {
     AdTrackDisk disk;
@@ -293,6 +333,14 @@ int main(int argc, char **argv)
             return 1;
         }
         return command_image_adf(unit, argv[3]);
+    }
+
+    if (argc == 4 && strcmp(argv[1], "verify-adf") == 0 && parse_ulong(argv[2], &unit)) {
+        if (unit > 3UL) {
+            fprintf(stderr, "unit must be 0..3\n");
+            return 1;
+        }
+        return command_verify_adf(unit, argv[3]);
     }
 
     if (argc == 3 && strcmp(argv[1], "qualify-media-change") == 0 &&
