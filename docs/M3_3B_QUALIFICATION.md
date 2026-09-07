@@ -135,10 +135,11 @@ probe, read-sector, adf-info, adf-read-sector, verify-adf (1760 sectors),
 image-adf (1760/901120), and restore-preflight (`NO WRITE PERFORMED`).
 
 An explicit restore/eject timing attempt was made after the successful proof.
-The restore result file still contained the prior successful RC 0 result, and
-the emulator/shell then terminated with host status 139 before a controlled
-media-change diagnostic could be captured. This is not claimed as an exact
-restore-specific media-change runtime PASS. The separate repeated
+The restore result file still contained the prior successful RC 0 result. The
+auxiliary X11 screenshot helper exited with host status 139 when the window
+closed, before a controlled restore-specific media-change diagnostic could be
+captured; no Amiga guru or guest crash was observed. This is not claimed as an
+exact restore-specific media-change runtime PASS. The separate repeated
 `qualify-media-change` test is the accepted real TD_CHANGENUM observation
 (0 → 1, RC 0); restore-path change checks are statically verified.
 
