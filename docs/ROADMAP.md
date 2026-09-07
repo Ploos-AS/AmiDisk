@@ -15,11 +15,27 @@ Read-only DF0-DF3 backend: open/close, media change, write protection, standard 
 
 ## M2 - Standard ADF read engine
 
-Read-only standard 880 KiB ADF backend: exact geometry/size validation, deterministic errors, CHS sector reads and diagnostic CLI. No image creation or media writes.
+Read-only standard 880 KiB ADF backend: exact geometry/size validation, deterministic errors, CHS sector reads and diagnostic CLI. Native runtime qualification complete.
 
 ## M3 - Copy, image and verify
 
-Introduce controlled write paths only after M2 qualification: disk-to-ADF creation, ADF-to-disk restore, DFx-to-DFy copy, disk-to-RAM-to-disk, verify-after-write, per-track state and explicit destructive-operation confirmation.
+Controlled write paths introduced incrementally after M2 qualification.
+
+### M3.1 - Disk to ADF imaging
+
+DFx to newly-created standard ADF. Physical media remains read-only. Existing destination files are never overwritten; partial output is removed on failure; source disk changes are guarded with `TD_CHANGENUM`.
+
+### M3.2 - Verify
+
+Compare physical disk and ADF sector-by-sector with deterministic mismatch reporting and summary.
+
+### M3.3 - ADF to disk restore
+
+First physical-media write path, with write-protect handling, explicit destructive confirmation and post-write verification.
+
+### Later M3 work
+
+DFx-to-DFy copy, disk-to-RAM-to-disk, per-track state and additional copy workflows.
 
 ## M4 - Recovery
 
