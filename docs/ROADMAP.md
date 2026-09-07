@@ -23,11 +23,11 @@ Controlled write paths introduced incrementally after M2 qualification.
 
 ### M3.1 - Disk to ADF imaging
 
-DFx to newly-created standard ADF. Physical media remains read-only. Existing destination files are never overwritten; partial output is removed on failure; source disk changes are guarded with `TD_CHANGENUM`.
+GREEN. DFx to newly-created standard ADF. Physical media remains read-only. Existing destination files are never overwritten; partial output is removed on failure; source disk changes are guarded with `TD_CHANGENUM`. Visible FS-UAE runtime qualification complete.
 
 ### M3.2 - Verify
 
-Compare physical disk and ADF sector-by-sector with deterministic mismatch reporting and summary.
+Implemented, qualification pending. Compare physical disk and standard ADF sector-by-sector, count mismatching sectors, report the first differing CHS/byte/absolute offset and guard against source-media changes. Strictly read-only.
 
 ### M3.3 - ADF to disk restore
 
