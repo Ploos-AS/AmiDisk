@@ -2,7 +2,6 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-TRACKDISK = (ROOT / "src/io/trackdisk/trackdisk.c").read_text(encoding="utf-8")
 PREFLIGHT = (ROOT / "src/operations/restore_preflight.c").read_text(encoding="utf-8")
 PREFLIGHT_H = (ROOT / "src/operations/restore_preflight.h").read_text(encoding="utf-8")
 MAIN = (ROOT / "src/main.c").read_text(encoding="utf-8")
@@ -32,9 +31,9 @@ assert "NO WRITE PERFORMED" in MAIN, "M3.3a no-write banner missing"
 assert "src/operations/restore_preflight.c" in MAKEFILE, "preflight source missing from native build"
 assert "tools/check_m3_3a.py" in MAKEFILE, "M3.3a static check missing from make check"
 
-all_m33a = "\n".join([TRACKDISK, PREFLIGHT, MAIN])
-for token in ["CMD_WRITE", "TD_FORMAT", "ETD_WRITE", "ETD_FORMAT"]:
-    assert token not in all_m33a, f"M3.3a must not introduce physical write/format: {token}"
+# M3.3a remains permanently read-only even after later milestones add writes elsewhere.
+for token in ["CMD_WRITE", "TD_FORMAT", "ETD_WRITE", "ETD_FORMAT", "ad_td_write_sector"]:
+    assert token not in PREFLIGHT, f"M3.3a preflight must remain read-only: {token}"
 
 for token in ["fwrite(", 'fopen(path, "wb")']:
     assert token not in PREFLIGHT, f"M3.3a preflight must not write files: {token}"
