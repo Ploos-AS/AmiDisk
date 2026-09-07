@@ -6,6 +6,7 @@
 #include "io/adf/adf.h"
 #include "io/trackdisk/trackdisk.h"
 #include "operations/image_adf.h"
+#include "operations/restore_adf.h"
 #include "operations/restore_preflight.h"
 #include "operations/verify_adf.h"
 
@@ -20,6 +21,7 @@ static void usage(const char *program)
     printf("  %s image-adf <unit> <path>\n", program);
     printf("  %s verify-adf <unit> <path>\n", program);
     printf("  %s restore-preflight <path> <unit> <ERASE-DFn>\n", program);
+    printf("  %s restore-adf <path> <unit> <ERASE-DFn>\n", program);
     printf("  %s qualify-media-change <unit>\n", program);
 }
 
@@ -245,6 +247,49 @@ static int command_restore_preflight(const char *path, ULONG unit,
     return 0;
 }
 
+static int command_restore_adf(const char *path, ULONG unit,
+                               const char *confirmation)
+{
+    AdRestoreReport report;
+    AdRestoreResult result;
+
+    printf("RESTORE: %s -> DF%u\n", path, (unsigned int)unit);
+    puts("WARNING: this command overwrites the destination disk.");
+    result = ad_restore_adf_to_disk(path, unit, confirmation, &report);
+    if (result != AD_RESTORE_OK) {
+        fprintf(stderr,
+                "restore-adf failed: %s after written=%u verified=%u at C%u H%u S%u",
+                ad_restore_result_string(result),
+                (unsigned int)report.sectors_written,
+                (unsigned int)report.sectors_verified,
+                (unsigned int)report.failure_cylinder,
+                (unsigned int)report.failure_head,
+                (unsigned int)report.failure_sector);
+        if (report.preflight_result != AD_RESTORE_PREFLIGHT_OK) {
+            fprintf(stderr, " (%s)",
+                    ad_restore_preflight_result_string(report.preflight_result));
+        } else if (report.adf_result != AD_ADF_OK) {
+            fprintf(stderr, " (%s)", ad_adf_result_string(report.adf_result));
+        } else if (report.destination_result != AD_TD_OK) {
+            fprintf(stderr, " (%s)", ad_td_result_string(report.destination_result));
+        } else if (result == AD_RESTORE_ERR_VERIFY) {
+            fprintf(stderr, " byte=%u expected=%02x actual=%02x",
+                    (unsigned int)report.failure_byte,
+                    (unsigned int)report.expected_byte,
+                    (unsigned int)report.actual_byte);
+        }
+        fputc('\n', stderr);
+        return 2;
+    }
+
+    printf("restore-adf OK: sectors-written=%u sectors-verified=%u bytes=%u change=%u\n",
+           (unsigned int)report.sectors_written,
+           (unsigned int)report.sectors_verified,
+           (unsigned int)report.bytes_written,
+           (unsigned int)report.end_change_number);
+    return 0;
+}
+
 static int command_qualify_media_change(ULONG unit)
 {
     AdTrackDisk disk;
@@ -380,6 +425,15 @@ int main(int argc, char **argv)
             return 1;
         }
         return command_restore_preflight(argv[2], unit, argv[4]);
+    }
+
+    if (argc == 5 && strcmp(argv[1], "restore-adf") == 0 &&
+        parse_ulong(argv[3], &unit)) {
+        if (unit > 3UL) {
+            fprintf(stderr, "unit must be 0..3\n");
+            return 1;
+        }
+        return command_restore_adf(argv[2], unit, argv[4]);
     }
 
     if (argc == 3 && strcmp(argv[1], "qualify-media-change") == 0 &&
