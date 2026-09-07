@@ -16,6 +16,7 @@ static void usage(const char *program)
     printf("  %s adf-info <path>\n", program);
     printf("  %s adf-read-sector <path> <cylinder> <head> <sector>\n", program);
     printf("  %s image-adf <unit> <path>\n", program);
+    printf("  %s qualify-media-change <unit>\n", program);
 }
 
 static int parse_ulong(const char *text, ULONG *value)
@@ -174,6 +175,77 @@ static int command_image_adf(ULONG unit, const char *path)
     return 0;
 }
 
+static int command_qualify_media_change(ULONG unit)
+{
+    AdTrackDisk disk;
+    AdTdStatus before_status;
+    AdTdStatus after_status;
+    AdTdResult result;
+    ULONG before_change;
+    ULONG after_change;
+    int ch;
+
+    result = ad_td_open(&disk, unit);
+    if (result != AD_TD_OK) {
+        fprintf(stderr, "DF%u: %s\n", (unsigned int)unit, ad_td_result_string(result));
+        return 2;
+    }
+
+    result = ad_td_get_status(&disk, &before_status);
+    if (result != AD_TD_OK) {
+        fprintf(stderr, "DF%u initial status: %s\n", (unsigned int)unit,
+                ad_td_result_string(result));
+        ad_td_close(&disk);
+        return 2;
+    }
+
+    result = ad_td_get_change_number(&disk, &before_change);
+    if (result != AD_TD_OK) {
+        fprintf(stderr, "DF%u initial change number: %s\n", (unsigned int)unit,
+                ad_td_result_string(result));
+        ad_td_close(&disk);
+        return 2;
+    }
+
+    printf("DF%u before: media=%s change=%u\n", (unsigned int)unit,
+           before_status.media_present ? "present" : "absent",
+           (unsigned int)before_change);
+    puts("Eject or swap the disk in FS-UAE now, then press RETURN.");
+    do {
+        ch = getchar();
+    } while (ch != '\n' && ch != EOF);
+
+    result = ad_td_get_status(&disk, &after_status);
+    if (result != AD_TD_OK) {
+        fprintf(stderr, "DF%u final status: %s\n", (unsigned int)unit,
+                ad_td_result_string(result));
+        ad_td_close(&disk);
+        return 2;
+    }
+
+    result = ad_td_get_change_number(&disk, &after_change);
+    if (result != AD_TD_OK) {
+        fprintf(stderr, "DF%u final change number: %s\n", (unsigned int)unit,
+                ad_td_result_string(result));
+        ad_td_close(&disk);
+        return 2;
+    }
+
+    printf("DF%u after: media=%s change=%u\n", (unsigned int)unit,
+           after_status.media_present ? "present" : "absent",
+           (unsigned int)after_change);
+
+    ad_td_close(&disk);
+
+    if (after_change == before_change) {
+        fprintf(stderr, "qualification failed: change number did not change\n");
+        return 2;
+    }
+
+    puts("qualification OK: trackdisk media change observed");
+    return 0;
+}
+
 int main(int argc, char **argv)
 {
     ULONG unit;
@@ -221,6 +293,15 @@ int main(int argc, char **argv)
             return 1;
         }
         return command_image_adf(unit, argv[3]);
+    }
+
+    if (argc == 3 && strcmp(argv[1], "qualify-media-change") == 0 &&
+        parse_ulong(argv[2], &unit)) {
+        if (unit > 3UL) {
+            fprintf(stderr, "unit must be 0..3\n");
+            return 1;
+        }
+        return command_qualify_media_change(unit);
     }
 
     usage(argv[0]);
