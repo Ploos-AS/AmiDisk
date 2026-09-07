@@ -109,6 +109,23 @@ AdTdResult ad_td_get_status(AdTrackDisk *disk, AdTdStatus *status)
     return AD_TD_OK;
 }
 
+AdTdResult ad_td_get_change_number(AdTrackDisk *disk, ULONG *change_number)
+{
+    AdTdResult result;
+
+    if (change_number == NULL) {
+        return AD_TD_ERR_ARGUMENT;
+    }
+
+    result = ad_td_do(disk, TD_CHANGENUM, NULL, 0, 0);
+    if (result != AD_TD_OK) {
+        return result;
+    }
+
+    *change_number = disk->io->iotd_Req.io_Actual;
+    return AD_TD_OK;
+}
+
 AdTdResult ad_td_read_sector(AdTrackDisk *disk, ULONG cylinder, ULONG head,
                              ULONG sector, void *buffer)
 {
