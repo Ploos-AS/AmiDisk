@@ -36,6 +36,7 @@ typedef struct AdTdStatus {
 AdTdResult ad_td_open(AdTrackDisk *disk, ULONG unit);
 void ad_td_close(AdTrackDisk *disk);
 AdTdResult ad_td_get_status(AdTrackDisk *disk, AdTdStatus *status);
+AdTdResult ad_td_get_change_number(AdTrackDisk *disk, ULONG *change_number);
 AdTdResult ad_td_read_sector(AdTrackDisk *disk, ULONG cylinder, ULONG head,
                              ULONG sector, void *buffer);
 const char *ad_td_result_string(AdTdResult result);
