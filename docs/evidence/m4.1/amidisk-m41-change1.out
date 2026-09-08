@@ -1,0 +1,4 @@
+DF1 before: media=present change=0
+Eject or swap the disk in FS-UAE now, then press RETURN.
+DF1 after: media=absent change=1
+qualification OK: trackdisk media change observed

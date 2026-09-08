@@ -1,0 +1,13 @@
+FailAt 21
+Echo "TEST probe-absent"
+AmiDisk probe 0 >Work:no-probe.out
+Echo $RC >Work:no-probe.rc
+Type Work:no-probe.out
+Echo "RC:"
+Type Work:no-probe.rc
+Echo "TEST recover-absent"
+AmiDisk recover-read 0 0 0 0 4 >Work:no-recover.out
+Echo $RC >Work:no-recover.rc
+Type Work:no-recover.out
+Echo "RC:"
+Type Work:no-recover.rc

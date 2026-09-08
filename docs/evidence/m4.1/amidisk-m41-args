@@ -1,0 +1,37 @@
+FailAt 21
+Echo "TEST budget0"
+AmiDisk recover-read 0 0 0 0 0 >Work:budget0.out
+Echo $RC >Work:budget0.rc
+Type Work:budget0.out
+Echo "RC:"
+Type Work:budget0.rc
+Echo "TEST budget17"
+AmiDisk recover-read 0 0 0 0 17 >Work:budget17.out
+Echo $RC >Work:budget17.rc
+Type Work:budget17.out
+Echo "RC:"
+Type Work:budget17.rc
+Echo "TEST rangeC"
+AmiDisk recover-read 0 80 0 0 1 >Work:rangeC.out
+Echo $RC >Work:rangeC.rc
+Type Work:rangeC.out
+Echo "RC:"
+Type Work:rangeC.rc
+Echo "TEST rangeH"
+AmiDisk recover-read 0 0 2 0 1 >Work:rangeH.out
+Echo $RC >Work:rangeH.rc
+Type Work:rangeH.out
+Echo "RC:"
+Type Work:rangeH.rc
+Echo "TEST rangeS"
+AmiDisk recover-read 0 0 0 11 1 >Work:rangeS.out
+Echo $RC >Work:rangeS.rc
+Type Work:rangeS.out
+Echo "RC:"
+Type Work:rangeS.rc
+Echo "TEST unit4"
+AmiDisk recover-read 4 0 0 0 1 >Work:unit4.out
+Echo $RC >Work:unit4.rc
+Type Work:unit4.out
+Echo "RC:"
+Type Work:unit4.rc

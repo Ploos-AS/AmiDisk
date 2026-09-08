@@ -1,0 +1,6 @@
+FailAt 21
+AmiDisk qualify-media-change 0 >Work:change2.out
+Echo $RC >Work:change2.rc
+Type Work:change2.out
+Echo "RC:"
+Type Work:change2.rc

@@ -1,0 +1,3 @@
+COPY: DF0 -> DF1
+WARNING: this command overwrites the destination disk.
+copy-disk OK: sectors-read=1760 sectors-written=1760 sectors-verified=1760 bytes=901120 source-change=2 destination-change=2

@@ -1,6 +1,6 @@
 # M4.1 Recovery Read Foundation qualification
 
-Status: IMPLEMENTED. RUNTIME QUALIFICATION PENDING.
+Status: M4.1 RUNTIME QUALIFICATION PASS.
 
 Starting qualified baseline: `4ae68da65ba6db3d672b678ec0406918a6e79d14` (M3 GREEN reconciliation).
 
@@ -214,6 +214,59 @@ M4.1 may be marked GREEN only when:
 - no crash, guru or hang is observed.
 
 Do not add a production test backdoor merely to manufacture bad sectors or media-change timing.
+
+## Completed runtime evidence
+
+Starting HEAD, origin/main and divergence were respectively
+`d4049458774c85ae4644ee51f5b176f58a9bae8c`, the same, and `0 0`; the starting
+worktree was clean. The final commit is recorded below. FS-UAE 3.2.35 was used
+visibly with Motorola 68000, Kickstart 37.175 and Workbench 37.67. DF0 held a
+known-good disposable standard DD Workbench disk; no original or valuable floppy
+was used, and the source remained read-only throughout.
+
+The host gate passed M0, M1, M2, M3.1, M3.2, M3.3a, M3.3b, M3.4 and M4.1
+static checks. Native `m68k-amigaos-gcc` with `-m68000 -noixemul` passed and
+`file AmiDisk` reported an AmigaOS `loadseg()` executable. The guest version was
+`AmiDisk 0.4.0-m4.1` / `Motorola 68000 / AmigaOS 2.04+`.
+
+Healthy recovery reads both returned RC 0 and attempts=1. C0/H0/S0 printed
+`44 4f 53 00 e3 3d 0e 73 00 00 03 70 43 fa 00 3e`, identical to normal
+`read-sector`. C10/H1/S5 with budget 16 also returned attempts=1 and printed
+`00 00 00 08 00 00 00 e5 00 00 00 07 00 00 01 e8`, identical to normal
+`read-sector`. The legal maximum C79/H1/S10 with budget 16 returned RC 0 and
+attempts=1.
+
+Retry budgets 0 and 17 were deterministically rejected with RC 1 and
+`attempts must be 1..16`. Unit 4 was rejected with RC 1 and `unit must be
+0..3`; C80, H2 and S11 were rejected with RC 2 and `invalid recovery read
+argument`. These validations occur before the recovery device path. No
+naturally unreadable sector was available, so `AD_RECOVERY_READ_ERR_EXHAUSTED`
+is statically verified but not runtime-observed.
+
+After a visible DF0 eject, `probe 0` reported `media=absent`; a valid
+`recover-read 0 0 0 0 4` returned RC 2, `no media present`, attempts=0, with no
+crash, guru or hang. A separate visible `qualify-media-change 0` run reported
+`DF0 before: media=present change=0` and `DF0 after: media=absent change=1`,
+RC 0, `qualification OK: trackdisk media change observed`. An attempted
+recovery after that eject reached the controlled no-media result; the exact
+`AD_RECOVERY_READ_ERR_MEDIA_CHANGED` branch was not claimed as runtime-observed.
+
+The read-only safety audit found no `CMD_WRITE`, `CMD_UPDATE`, `CMD_CLEAR`,
+`TD_FORMAT`, `ETD_WRITE`, `ETD_FORMAT` or `ad_td_write_sector` in
+`recovery_read.c`; the retry loop has one shared `ad_td_read_sector` path.
+
+Representative regressions passed in visible FS-UAE: M1 probe/read-sector, M2
+`adf-info`/`adf-read-sector`, M3.1 `image-adf` (1760 sectors/901120 bytes),
+M3.2 `verify-adf` (1760 identical sectors), and M3.3a
+`restore-preflight` (`NO WRITE PERFORMED`). M3.3b and M3.4 static gates remain
+PASS; no destructive rerun was needed. No crash, guru or hang occurred and no
+production test backdoor was introduced.
+
+Runtime evidence is retained under `docs/evidence/m4.1/`.
+
+## Final result
+
+**M4.1 RUNTIME QUALIFICATION PASS.**
 
 ## Final report
 

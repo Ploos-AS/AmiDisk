@@ -1,0 +1,13 @@
+{
+  "forbidden_tokens": {
+    "CMD_WRITE": 0,
+    "CMD_UPDATE": 0,
+    "CMD_CLEAR": 0,
+    "TD_FORMAT": 0,
+    "ETD_WRITE": 0,
+    "ETD_FORMAT": 0,
+    "ad_td_write_sector": 0
+  },
+  "ad_td_read_sector_count": 1,
+  "note": "Recovery module is read-only; exhausted branch static-only because no naturally unreadable sector was available."
+}

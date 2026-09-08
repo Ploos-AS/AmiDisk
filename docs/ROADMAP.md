@@ -51,7 +51,7 @@ Recovery remains source-read-only. The recovery path must never silently present
 
 ### M4.1 - Recovery read foundation
 
-Implemented, qualification pending. Adds bounded per-sector retry policy (1-16 attempts), deterministic retry accounting, real `TD_CHANGENUM` guards before/during/after reads, no-media handling and an explicit sector recovery record carrying CHS, attempts and last trackdisk result. No physical write primitive is reachable from this module.
+GREEN. Adds bounded per-sector retry policy (1-16 attempts), deterministic retry accounting, real `TD_CHANGENUM` guards before/during/after reads, no-media handling and an explicit sector recovery record carrying CHS, attempts and last trackdisk result. No physical write primitive is reachable from this module. Visible runtime qualification passed on the Motorola 68000 / AmigaOS 2.04+ baseline.
 
 ### M4.2 - Partial imaging and bad-sector map
 

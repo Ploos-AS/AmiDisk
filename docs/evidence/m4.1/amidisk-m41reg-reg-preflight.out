@@ -1,0 +1,4 @@
+Restore preflight: Work:restore-source.adf -> DF0
+WARNING: a later restore command will destroy all data on the destination disk.
+restore-preflight OK: source=901120 bytes media=present write-protected=no change=2
+NO WRITE PERFORMED

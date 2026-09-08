@@ -1,0 +1,22 @@
+FailAt 21
+AmiDisk probe 0 >Work:reg-probe.out
+Echo $RC >Work:reg-probe.rc
+Type Work:reg-probe.out
+AmiDisk read-sector 0 0 0 0 >Work:reg-read.out
+Echo $RC >Work:reg-read.rc
+Type Work:reg-read.out
+AmiDisk adf-info Work:restore-source.adf >Work:reg-info.out
+Echo $RC >Work:reg-info.rc
+Type Work:reg-info.out
+AmiDisk adf-read-sector Work:restore-source.adf 0 0 0 >Work:reg-adf-read.out
+Echo $RC >Work:reg-adf-read.rc
+Type Work:reg-adf-read.out
+AmiDisk image-adf 0 Work:m41-regression-image.adf >Work:reg-image.out
+Echo $RC >Work:reg-image.rc
+Type Work:reg-image.out
+AmiDisk verify-adf 0 Work:restore-source.adf >Work:reg-verify.out
+Echo $RC >Work:reg-verify.rc
+Type Work:reg-verify.out
+AmiDisk restore-preflight Work:restore-source.adf 0 ERASE-DF0 >Work:reg-preflight.out
+Echo $RC >Work:reg-preflight.rc
+Type Work:reg-preflight.out

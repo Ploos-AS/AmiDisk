@@ -1,0 +1,13 @@
+FailAt 21
+Echo "TEST qualify-change"
+AmiDisk qualify-media-change 0 >Work:change.out
+Echo $RC >Work:change.rc
+Type Work:change.out
+Echo "RC:"
+Type Work:change.rc
+Echo "TEST recover-after-eject"
+AmiDisk recover-read 0 0 0 0 4 >Work:after-eject.out
+Echo $RC >Work:after-eject.rc
+Type Work:after-eject.out
+Echo "RC:"
+Type Work:after-eject.rc

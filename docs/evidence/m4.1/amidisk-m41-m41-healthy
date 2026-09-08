@@ -1,0 +1,43 @@
+FailAt 21
+Echo "TEST version"
+AmiDisk --version >Work:version.out
+Echo $RC >Work:version.rc
+Type Work:version.out
+Echo "RC:"
+Type Work:version.rc
+Echo "TEST probe"
+AmiDisk probe 0 >Work:probe.out
+Echo $RC >Work:probe.rc
+Type Work:probe.out
+Echo "RC:"
+Type Work:probe.rc
+Echo "TEST read0"
+AmiDisk read-sector 0 0 0 0 >Work:read0.out
+Echo $RC >Work:read0.rc
+Type Work:read0.out
+Echo "RC:"
+Type Work:read0.rc
+Echo "TEST recover0"
+AmiDisk recover-read 0 0 0 0 1 >Work:recover0.out
+Echo $RC >Work:recover0.rc
+Type Work:recover0.out
+Echo "RC:"
+Type Work:recover0.rc
+Echo "TEST recover16"
+AmiDisk recover-read 0 10 1 5 16 >Work:recover16.out
+Echo $RC >Work:recover16.rc
+Type Work:recover16.out
+Echo "RC:"
+Type Work:recover16.rc
+Echo "TEST read105"
+AmiDisk read-sector 0 10 1 5 >Work:read105.out
+Echo $RC >Work:read105.rc
+Type Work:read105.out
+Echo "RC:"
+Type Work:read105.rc
+Echo "TEST max"
+AmiDisk recover-read 0 79 1 10 16 >Work:max.out
+Echo $RC >Work:max.rc
+Type Work:max.out
+Echo "RC:"
+Type Work:max.rc
