@@ -82,12 +82,15 @@ static int ad_recovery_write_map_header(FILE *map, ULONG unit,
                                         ULONG max_attempts)
 {
     if (fprintf(map, "AMIDISK_RECOVERY_MAP\t1\n") < 0 ||
-        fprintf(map, "geometry\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\n",
-                AD_TD_CYLINDERS, AD_TD_HEADS, AD_TD_SECTORS_PER_TRACK,
-                AD_TD_SECTOR_SIZE, AD_RECOVERY_TOTAL_SECTORS,
-                AD_TD_DISK_BYTES) < 0 ||
-        fprintf(map, "source_unit\t%lu\n", unit) < 0 ||
-        fprintf(map, "retry_budget\t%lu\n", max_attempts) < 0 ||
+        fprintf(map, "geometry\t%u\t%u\t%u\t%u\t%u\t%u\n",
+                (unsigned int)AD_TD_CYLINDERS,
+                (unsigned int)AD_TD_HEADS,
+                (unsigned int)AD_TD_SECTORS_PER_TRACK,
+                (unsigned int)AD_TD_SECTOR_SIZE,
+                (unsigned int)AD_RECOVERY_TOTAL_SECTORS,
+                (unsigned int)AD_TD_DISK_BYTES) < 0 ||
+        fprintf(map, "source_unit\t%u\n", (unsigned int)unit) < 0 ||
+        fprintf(map, "retry_budget\t%u\n", (unsigned int)max_attempts) < 0 ||
         fprintf(map, "placeholder_byte\t00\n") < 0 ||
         fprintf(map,
                 "columns\tindex\tcylinder\thead\tsector\tstate\tattempts\ttd_result\n") < 0) {
@@ -101,10 +104,14 @@ static int ad_recovery_write_map_row(FILE *map, ULONG index,
                                      AdRecoverySectorState state,
                                      ULONG attempts, AdTdResult td_result)
 {
-    return fprintf(map, "%lu\t%lu\t%lu\t%lu\t%s\t%lu\t%ld\n",
-                   index, cylinder, head, sector,
-                   ad_recovery_sector_state_string(state), attempts,
-                   (LONG)td_result) >= 0;
+    return fprintf(map, "%u\t%u\t%u\t%u\t%s\t%u\t%d\n",
+                   (unsigned int)index,
+                   (unsigned int)cylinder,
+                   (unsigned int)head,
+                   (unsigned int)sector,
+                   ad_recovery_sector_state_string(state),
+                   (unsigned int)attempts,
+                   (int)td_result) >= 0;
 }
 
 static int ad_recovery_write_sector(FILE *image, const unsigned char *buffer)
