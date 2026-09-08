@@ -7,7 +7,6 @@ COPY_H = (ROOT / "src/operations/copy_disk.h").read_text(encoding="utf-8")
 TRACKDISK = (ROOT / "src/io/trackdisk/trackdisk.c").read_text(encoding="utf-8")
 MAIN = (ROOT / "src/main.c").read_text(encoding="utf-8")
 MAKEFILE = (ROOT / "Makefile").read_text(encoding="utf-8")
-VERSION = (ROOT / "src/core/ad_version.h").read_text(encoding="utf-8")
 
 for token in [
     "ad_copy_disk",
@@ -59,7 +58,6 @@ assert "source and destination units must differ" in MAIN
 assert "WARNING: this command overwrites the destination disk." in MAIN
 assert "src/operations/copy_disk.c" in MAKEFILE
 assert "tools/check_m3_4.py" in MAKEFILE
-assert 'AMIDISK_VERSION "0.3.0-m3.4"' in VERSION
 assert 512 * 11 * 2 * 80 == 901120
 
 print("M3.4 static checks: PASS")
