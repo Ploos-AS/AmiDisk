@@ -1,0 +1,2 @@
+COPY: DF0 -> DF1
+WARNING: this command overwrites the destination disk.

@@ -1,0 +1,7 @@
+FailAt 21
+Echo "TEST interrupt1"
+AmiDisk copy-disk 0 1 ERASE-DF1 >Work:interrupt1.out
+Echo $RC >Work:interrupt1.rc
+Type Work:interrupt1.out
+Echo "RC:"
+Type Work:interrupt1.rc

@@ -1,0 +1,21 @@
+FS-UAE 3.2.35 (Built for Linux x86-64)
+cpu = 68000
+floppy_drive_0 = /tmp/amidisk-m34/source.adf
+floppy_drive_1 = /tmp/amidisk-m34/destination.adf
+floppy_drive_count = 2
+hard_drive_0 = /tmp/amidisk-m34/Workbench2.0
+hard_drive_0_label = System
+hard_drive_0_priority = 10
+kickstart_file = /home/pgo/Documents/FS-UAE/Kickstarts/amiga-os-204.rom
+uae_floppy_write_protect = false
+value for option floppy_drive_0: /tmp/amidisk-m34/source.adf
+value for option floppy_drive_1: /tmp/amidisk-m34/destination.adf
+value for option floppy_drive_2: (null)
+value for option floppy_drive_3: (null)
+set option "floppy_write_protect" to "false" (result: 1)
+Known ROM 'KS ROM v2.04 (A500+)' loaded
+CPU=68000, FPU=0, MMU=0, JIT=0. prefetch and cycle-exact 24-bit
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]
+=KS ROM v2.04 (A500+) rev 37.175 (512k) [390979-01]

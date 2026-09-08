@@ -1,0 +1,38 @@
+{
+  "source.adf": {
+    "bytes": 901120,
+    "sha256": "9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef"
+  },
+  "destination.adf": {
+    "bytes": 901120,
+    "sha256": "3da86648e602f4e0916663d2b4893011423837b2f2b6885e421310338412c02a"
+  },
+  "AmiDisk": {
+    "bytes": 31484,
+    "sha256": "ae864ff15e4d548eb950a9b845507d636840e15af590f8826ee893cc286f1472"
+  },
+  "m34-regression-image.adf": {
+    "bytes": 901120,
+    "sha256": "9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef"
+  },
+  "m34-source-after.adf": {
+    "bytes": 901120,
+    "sha256": "9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef"
+  },
+  "m34-after.adf": {
+    "bytes": 901120,
+    "sha256": "9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef"
+  },
+  "m34-reject-after.adf": {
+    "bytes": 901120,
+    "sha256": "3da86648e602f4e0916663d2b4893011423837b2f2b6885e421310338412c02a"
+  },
+  "m34-before.adf": {
+    "bytes": 901120,
+    "sha256": "3da86648e602f4e0916663d2b4893011423837b2f2b6885e421310338412c02a"
+  },
+  "m34-source.adf": {
+    "bytes": 901120,
+    "sha256": "9023055f9fdc948f2f46fddd49776303cc9c1a997e86cbe927ec60d8c6ffe9ef"
+  }
+}

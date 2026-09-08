@@ -1,0 +1,11 @@
+{
+  "after_return_first": {
+    "mtime_ns": 1788845231859925317,
+    "sha256": "d2e0fe6b2064e8c13608f674cfc78d06c895e429361f0140744dd0e7af1afa6d"
+  },
+  "after_return_three_seconds_later": {
+    "mtime_ns": 1788845231859925317,
+    "sha256": "d2e0fe6b2064e8c13608f674cfc78d06c895e429361f0140744dd0e7af1afa6d"
+  },
+  "unchanged": true
+}

@@ -1,0 +1,37 @@
+FailAt 21
+Echo "TEST ready0"
+AmiDisk probe 0 >Work:ready0.out
+Echo $RC >Work:ready0.rc
+Type Work:ready0.out
+Echo "RC:"
+Type Work:ready0.rc
+Echo "TEST ready1"
+AmiDisk probe 1 >Work:ready1.out
+Echo $RC >Work:ready1.rc
+Type Work:ready1.out
+Echo "RC:"
+Type Work:ready1.rc
+Echo "TEST copy"
+AmiDisk copy-disk 0 1 ERASE-DF1 >Work:copy.out
+Echo $RC >Work:copy.rc
+Type Work:copy.out
+Echo "RC:"
+Type Work:copy.rc
+Echo "TEST immediate-verify"
+AmiDisk verify-adf 1 Work:m34-source.adf >Work:immediate-verify.out
+Echo $RC >Work:immediate-verify.rc
+Type Work:immediate-verify.out
+Echo "RC:"
+Type Work:immediate-verify.rc
+Echo "TEST after"
+AmiDisk image-adf 1 Work:m34-after.adf >Work:after.out
+Echo $RC >Work:after.rc
+Type Work:after.out
+Echo "RC:"
+Type Work:after.rc
+Echo "TEST source-after"
+AmiDisk image-adf 0 Work:m34-source-after.adf >Work:source-after.out
+Echo $RC >Work:source-after.rc
+Type Work:source-after.out
+Echo "RC:"
+Type Work:source-after.rc

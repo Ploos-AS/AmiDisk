@@ -1,0 +1,13 @@
+FailAt 21
+Echo "TEST wrong"
+AmiDisk copy-disk 0 1 WRONG >Work:wrong.out
+Echo $RC >Work:wrong.rc
+Type Work:wrong.out
+Echo "RC:"
+Type Work:wrong.rc
+Echo "TEST wrong-unit"
+AmiDisk copy-disk 0 1 ERASE-DF0 >Work:wrong-unit.out
+Echo $RC >Work:wrong-unit.rc
+Type Work:wrong-unit.out
+Echo "RC:"
+Type Work:wrong-unit.rc

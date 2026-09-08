@@ -1,0 +1,13 @@
+FailAt 21
+Echo "TEST prefix"
+AmiDisk copy-disk 0 1 XERASE-DF1 >Work:prefix.out
+Echo $RC >Work:prefix.rc
+Type Work:prefix.out
+Echo "RC:"
+Type Work:prefix.rc
+Echo "TEST suffix"
+AmiDisk copy-disk 0 1 ERASE-DF1X >Work:suffix.out
+Echo $RC >Work:suffix.rc
+Type Work:suffix.out
+Echo "RC:"
+Type Work:suffix.rc

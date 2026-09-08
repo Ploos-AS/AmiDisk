@@ -1,0 +1,7 @@
+FailAt 21
+Echo "TEST reject-image"
+AmiDisk image-adf 1 Work:m34-reject-after.adf >Work:reject-image.out
+Echo $RC >Work:reject-image.rc
+Type Work:reject-image.out
+Echo "RC:"
+Type Work:reject-image.rc

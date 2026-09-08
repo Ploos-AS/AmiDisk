@@ -1,0 +1,13 @@
+FailAt 21
+Echo "TEST case"
+AmiDisk copy-disk 0 1 erase-df1 >Work:case.out
+Echo $RC >Work:case.rc
+Type Work:case.out
+Echo "RC:"
+Type Work:case.rc
+Echo "TEST mixed"
+AmiDisk copy-disk 0 1 ERASE-df1 >Work:mixed.out
+Echo $RC >Work:mixed.rc
+Type Work:mixed.out
+Echo "RC:"
+Type Work:mixed.rc

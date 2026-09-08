@@ -1,0 +1,37 @@
+FailAt 21
+Echo "TEST spot0-0-0-0"
+AmiDisk read-sector 0 0 0 0 >Work:spot0-0-0-0.out
+Echo $RC >Work:spot0-0-0-0.rc
+Type Work:spot0-0-0-0.out
+Echo "RC:"
+Type Work:spot0-0-0-0.rc
+Echo "TEST spot1-0-0-0"
+AmiDisk read-sector 1 0 0 0 >Work:spot1-0-0-0.out
+Echo $RC >Work:spot1-0-0-0.rc
+Type Work:spot1-0-0-0.out
+Echo "RC:"
+Type Work:spot1-0-0-0.rc
+Echo "TEST spot0-10-1-5"
+AmiDisk read-sector 0 10 1 5 >Work:spot0-10-1-5.out
+Echo $RC >Work:spot0-10-1-5.rc
+Type Work:spot0-10-1-5.out
+Echo "RC:"
+Type Work:spot0-10-1-5.rc
+Echo "TEST spot1-10-1-5"
+AmiDisk read-sector 1 10 1 5 >Work:spot1-10-1-5.out
+Echo $RC >Work:spot1-10-1-5.rc
+Type Work:spot1-10-1-5.out
+Echo "RC:"
+Type Work:spot1-10-1-5.rc
+Echo "TEST spot0-79-1-10"
+AmiDisk read-sector 0 79 1 10 >Work:spot0-79-1-10.out
+Echo $RC >Work:spot0-79-1-10.rc
+Type Work:spot0-79-1-10.out
+Echo "RC:"
+Type Work:spot0-79-1-10.rc
+Echo "TEST spot1-79-1-10"
+AmiDisk read-sector 1 79 1 10 >Work:spot1-79-1-10.out
+Echo $RC >Work:spot1-79-1-10.rc
+Type Work:spot1-79-1-10.out
+Echo "RC:"
+Type Work:spot1-79-1-10.rc

@@ -1,0 +1,55 @@
+FailAt 21
+Echo "TEST same0"
+AmiDisk copy-disk 0 0 ERASE-DF0 >Work:same0.out
+Echo $RC >Work:same0.rc
+Type Work:same0.out
+Echo "RC:"
+Type Work:same0.rc
+Echo "TEST same1"
+AmiDisk copy-disk 1 1 ERASE-DF1 >Work:same1.out
+Echo $RC >Work:same1.rc
+Type Work:same1.out
+Echo "RC:"
+Type Work:same1.rc
+Echo "TEST wrong"
+AmiDisk copy-disk 0 1 WRONG >Work:wrong.out
+Echo $RC >Work:wrong.rc
+Type Work:wrong.out
+Echo "RC:"
+Type Work:wrong.rc
+Echo "TEST wrong-unit"
+AmiDisk copy-disk 0 1 ERASE-DF0 >Work:wrong-unit.out
+Echo $RC >Work:wrong-unit.rc
+Type Work:wrong-unit.out
+Echo "RC:"
+Type Work:wrong-unit.rc
+Echo "TEST case"
+AmiDisk copy-disk 0 1 erase-df1 >Work:case.out
+Echo $RC >Work:case.rc
+Type Work:case.out
+Echo "RC:"
+Type Work:case.rc
+Echo "TEST mixed"
+AmiDisk copy-disk 0 1 ERASE-df1 >Work:mixed.out
+Echo $RC >Work:mixed.rc
+Type Work:mixed.out
+Echo "RC:"
+Type Work:mixed.rc
+Echo "TEST prefix"
+AmiDisk copy-disk 0 1 XERASE-DF1 >Work:prefix.out
+Echo $RC >Work:prefix.rc
+Type Work:prefix.out
+Echo "RC:"
+Type Work:prefix.rc
+Echo "TEST suffix"
+AmiDisk copy-disk 0 1 ERASE-DF1X >Work:suffix.out
+Echo $RC >Work:suffix.rc
+Type Work:suffix.out
+Echo "RC:"
+Type Work:suffix.rc
+Echo "TEST partial"
+AmiDisk copy-disk 0 1 ERASE-DF >Work:partial.out
+Echo $RC >Work:partial.rc
+Type Work:partial.out
+Echo "RC:"
+Type Work:partial.rc

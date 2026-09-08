@@ -1,0 +1,4 @@
+Restore preflight: Work:m34-source.adf -> DF1
+WARNING: a later restore command will destroy all data on the destination disk.
+restore-preflight OK: source=901120 bytes media=present write-protected=no change=4
+NO WRITE PERFORMED

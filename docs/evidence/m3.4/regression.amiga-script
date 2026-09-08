@@ -1,0 +1,43 @@
+FailAt 21
+Echo "TEST reg-probe"
+AmiDisk probe 0 >Work:reg-probe.out
+Echo $RC >Work:reg-probe.rc
+Type Work:reg-probe.out
+Echo "RC:"
+Type Work:reg-probe.rc
+Echo "TEST reg-read"
+AmiDisk read-sector 0 0 0 0 >Work:reg-read.out
+Echo $RC >Work:reg-read.rc
+Type Work:reg-read.out
+Echo "RC:"
+Type Work:reg-read.rc
+Echo "TEST reg-info"
+AmiDisk adf-info Work:m34-source.adf >Work:reg-info.out
+Echo $RC >Work:reg-info.rc
+Type Work:reg-info.out
+Echo "RC:"
+Type Work:reg-info.rc
+Echo "TEST reg-adf-read"
+AmiDisk adf-read-sector Work:m34-source.adf 0 0 0 >Work:reg-adf-read.out
+Echo $RC >Work:reg-adf-read.rc
+Type Work:reg-adf-read.out
+Echo "RC:"
+Type Work:reg-adf-read.rc
+Echo "TEST reg-image"
+AmiDisk image-adf 0 Work:m34-regression-image.adf >Work:reg-image.out
+Echo $RC >Work:reg-image.rc
+Type Work:reg-image.out
+Echo "RC:"
+Type Work:reg-image.rc
+Echo "TEST reg-verify"
+AmiDisk verify-adf 0 Work:m34-source.adf >Work:reg-verify.out
+Echo $RC >Work:reg-verify.rc
+Type Work:reg-verify.out
+Echo "RC:"
+Type Work:reg-verify.rc
+Echo "TEST reg-preflight"
+AmiDisk restore-preflight Work:m34-source.adf 1 ERASE-DF1 >Work:reg-preflight.out
+Echo $RC >Work:reg-preflight.rc
+Type Work:reg-preflight.out
+Echo "RC:"
+Type Work:reg-preflight.rc

@@ -1,0 +1,11 @@
+Transcribed from retained visible FS-UAE screenshots; stdout and immediate RC are separate .out/.rc files.
+pre-verify (baseline-complete.png): verify-adf data mismatch: sectors=1620 first=C0 H0 S0 byte=4 offset=4 disk=00 adf=e3; RC3.
+same0/same1 (same-drive.png): source and destination units must differ; RC1 each.
+wrong/wrong-unit/case/mixed/prefix/suffix/partial: destination confirmation does not match after read=0 written=0 verified=0 at C0 H0 S0; RC2 each.
+protected (protected.png): destination status check failed after read=0 written=0 verified=0 at C0 H0 S0 (destination: media is write-protected); RC2.
+empty0 (empty0.png): source status check failed after read=0 written=0 verified=0 at C0 H0 S0 (source: no media present); RC2.
+empty1 (empty1.png): destination status check failed after read=0 written=0 verified=0 at C0 H0 S0 (destination: no media present); RC2.
+interrupt0 (interrupt0-result.png): source read failed after read=54 written=54 verified=54 at C2 H0 S10 (source: trackdisk.device I/O error); RC2.
+interrupt1 (interrupt1-result.png): destination write failed after read=44 written=43 verified=43 at C1 H1 S10 (destination: trackdisk.device I/O error); RC2.
+Exact copy source-changed and destination-changed branches not observed.
+No guest crash, guru or hang observed.

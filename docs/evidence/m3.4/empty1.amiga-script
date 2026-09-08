@@ -1,0 +1,13 @@
+FailAt 21
+Echo "TEST empty1-probe"
+AmiDisk probe 1 >Work:empty1-probe.out
+Echo $RC >Work:empty1-probe.rc
+Type Work:empty1-probe.out
+Echo "RC:"
+Type Work:empty1-probe.rc
+Echo "TEST empty1-copy"
+AmiDisk copy-disk 0 1 ERASE-DF1 >Work:empty1-copy.out
+Echo $RC >Work:empty1-copy.rc
+Type Work:empty1-copy.out
+Echo "RC:"
+Type Work:empty1-copy.rc

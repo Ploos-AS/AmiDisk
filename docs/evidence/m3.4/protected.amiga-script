@@ -1,0 +1,13 @@
+FailAt 21
+Echo "TEST protected-probe"
+AmiDisk probe 1 >Work:protected-probe.out
+Echo $RC >Work:protected-probe.rc
+Type Work:protected-probe.out
+Echo "RC:"
+Type Work:protected-probe.rc
+Echo "TEST protected-copy"
+AmiDisk copy-disk 0 1 ERASE-DF1 >Work:protected-copy.out
+Echo $RC >Work:protected-copy.rc
+Type Work:protected-copy.out
+Echo "RC:"
+Type Work:protected-copy.rc

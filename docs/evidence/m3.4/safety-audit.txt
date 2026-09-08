@@ -1,0 +1,22 @@
+Production revision: d63ba24fbf0653967d885e9724a8663cbe53bb84
+Manual static audit:
+copy_disk.c CMD_WRITE: 0 occurrences
+copy_disk.c CMD_UPDATE: 0 occurrences
+copy_disk.c CMD_CLEAR: 0 occurrences
+copy_disk.c TD_FORMAT: 0 occurrences
+copy_disk.c ETD_WRITE: 0 occurrences
+copy_disk.c ETD_FORMAT: 0 occurrences
+copy_disk.c calls ad_td_write_sector(&destination, ...); never writes source.
+Argument/same-unit check and exact strcmp confirmation precede ad_td_open.
+Source/destination status and initial TD_CHANGENUM are captured before copy.
+Change guards run after initial reads, before each source read, after source read/before destination write, and after destination readback/compare.
+Loop sequence: ad_td_read_sector(source); change guard; ad_td_write_sector(destination); ad_td_read_sector(destination); memcmp(512); increment verified; change guard.
+Every failed guard/read/write/readback or memcmp mismatch closes both devices and returns before the next sector.
+Backend write primitive: CMD_WRITE -> return on failure -> CMD_UPDATE -> return on failure -> CMD_CLEAR.
+Backend primitive unchanged from qualified M3.3b baseline:
+(no diff)
+Physical command occurrences in production src:
+src/io/trackdisk/trackdisk.c:188:    result = ad_td_do(disk, CMD_WRITE, (APTR)buffer, AD_TD_SECTOR_SIZE, offset);
+src/io/trackdisk/trackdisk.c:196:    result = ad_td_do(disk, CMD_UPDATE, NULL, 0, 0);
+src/io/trackdisk/trackdisk.c:201:    return ad_td_do(disk, CMD_CLEAR, NULL, 0, 0);
+

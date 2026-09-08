@@ -1,0 +1,13 @@
+FailAt 21
+Echo "TEST same0"
+AmiDisk copy-disk 0 0 ERASE-DF0 >Work:same0.out
+Echo $RC >Work:same0.rc
+Type Work:same0.out
+Echo "RC:"
+Type Work:same0.rc
+Echo "TEST same1"
+AmiDisk copy-disk 1 1 ERASE-DF1 >Work:same1.out
+Echo $RC >Work:same1.rc
+Type Work:same1.out
+Echo "RC:"
+Type Work:same1.rc
