@@ -19,7 +19,7 @@ Read-only standard 880 KiB ADF backend: exact geometry/size validation, determin
 
 ## M3 - Copy, image and verify
 
-Controlled media workflows are introduced incrementally behind explicit qualification gates.
+GREEN. Controlled media workflows were introduced incrementally behind explicit qualification gates. M3.1 through M3.4 are all runtime-qualified in visible FS-UAE on the Motorola 68000 / AmigaOS 2.04+ baseline.
 
 ### M3.1 - Disk to ADF imaging
 
@@ -39,11 +39,11 @@ GREEN. Standard ADF to writable DFx restore through one guarded sector-write pri
 
 ### M3.4 - Disk to disk copy
 
-Implemented, runtime qualification pending. Copies a standard Amiga DD disk from one physical DFx unit to a different DFy unit. Destination overwrite requires exact `ERASE-DFy` confirmation. Source and destination media-change numbers are guarded throughout the operation, the M3.3b qualified sector-write primitive is reused unchanged, and every destination sector is immediately read back and compared before proceeding.
+GREEN. Standard Amiga DD disks can be copied directly from one physical DFx unit to a different DFy unit. Visible FS-UAE runtime qualification completed with 1760 sectors read, 1760 sectors written, 1760 sectors read-back verified and a byte-identical destination image while the source remained unchanged. Destination overwrite requires exact `ERASE-DFy` confirmation. Source and destination media-change numbers are guarded throughout the operation, and the M3.3b qualified `CMD_WRITE` -> `CMD_UPDATE` -> `CMD_CLEAR` sector-write primitive is reused unchanged.
 
 ### Later M3 work
 
-Disk-to-RAM-to-disk, per-track state and additional copy workflows.
+Disk-to-RAM-to-disk, per-track state and additional copy workflows may be added later where they support recovery, GUI or preservation work. They are not required for M3 GREEN status.
 
 ## M4 - Recovery
 
