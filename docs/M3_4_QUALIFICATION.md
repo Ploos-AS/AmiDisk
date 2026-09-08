@@ -1,6 +1,6 @@
 # M3.4 Direct Disk Copy runtime qualification
 
-Status: RUNTIME QUALIFICATION IN PROGRESS. No PASS claimed yet.
+Status: **M3.4 RUNTIME QUALIFICATION PASS.**
 
 ## Platform, revisions and host gate
 
@@ -13,6 +13,10 @@ Starting HEAD and starting origin/main:
 `d63ba24fbf0653967d885e9724a8663cbe53bb84`.
 The M3.3b qualified baseline is
 `3fce9757e6c9aa223c450a5a9a601c8f4fb40c02`.
+The qualification evidence and PASS report were committed on `main` at
+`38ab24e60c1eb61cd25b703667eca2213a0ca210`. Later documentation-only
+reconciliation commits may advance `main`; the tested runtime binary and the
+qualification evidence remain tied to the starting qualification HEAD above.
 Fetch, checkout main and ff-only pull succeeded. Initial worktree was clean,
 branch main, divergence `0 0`. The sandbox required escalation for .git writes
 and access to the visible X11 emulator window.
@@ -199,10 +203,14 @@ to source. A second destructive M3.3b restore was not run: M3.4 has already
 runtime-proven the same qualified physical write primitive with 1760 writes and
 1760 read-back verifications; M3.3b static checks remain PASS.
 
-The final host gate was rerun after runtime. M0 through M3.4 static checks,
-native Bebbo build and `file AmiDisk` all pass. Final branch is `main`,
-worktree is clean, `HEAD` equals `origin/main` at
-`d63ba24fbf0653967d885e9724a8663cbe53bb84`, and divergence is `0 0`.
+The final runtime host gate was rerun after qualification. M0 through M3.4
+static checks, native Bebbo build and `file AmiDisk` all passed. At completion
+of the qualification run, branch `main` was clean, `HEAD` equaled `origin/main`
+at `d63ba24fbf0653967d885e9724a8663cbe53bb84`, and divergence was `0 0`.
+The qualification report and evidence were then committed to `main` at
+`38ab24e60c1eb61cd25b703667eca2213a0ca210`; that commit is the documented
+M3.4 GREEN evidence point. Documentation-only reconciliation after that point
+does not change the tested binary or runtime result.
 
 ## Result
 
