@@ -55,7 +55,7 @@ GREEN. Adds bounded per-sector retry policy (1-16 attempts), deterministic retry
 
 ### M4.2 - Partial imaging and bad-sector map
 
-Build a full-geometry recovery artifact while explicitly recording GOOD/BAD/UNREAD sector state. Any placeholder bytes in an ADF-shaped reconstruction must be accompanied by machine-readable evidence and must never be described as recovered data.
+Implemented; host/native and runtime qualification pending. Builds a complete 901120-byte ADF-shaped recovery artifact together with an authoritative tab-separated sector map covering all 1760 sectors. Each sector is explicitly `GOOD`, `BAD` or `UNREAD`: GOOD contains recovered source bytes, while BAD/UNREAD positions contain zero placeholders that are never represented as recovered data. BAD means the configured M4.1 retry budget was exhausted; UNREAD means acquisition stopped trusting the source after a source/media-identity failure. Image/map outputs use exclusive creation, source identity is guarded across the whole acquisition with `TD_CHANGENUM`, and the source remains physically read-only.
 
 ### M4.3 - Resumable recovery
 
