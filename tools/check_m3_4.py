@@ -41,8 +41,8 @@ for token in [
 
 assert COPY.count("ad_td_write_sector(&destination") == 1, \
     "M3.4 must use one call site to the qualified sector-write primitive"
-assert COPY.count("ad_td_get_change_number") == 2, \
-    "M3.4 change helper must read source and destination change numbers"
+assert COPY.count("ad_td_get_change_number") == 4, \
+    "M3.4 must read initial source/destination change numbers and both again in the shared change guard"
 assert COPY.count("ad_copy_check_changes(") >= 4, \
     "M3.4 must check both media before/after destructive sector cycles"
 
