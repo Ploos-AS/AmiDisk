@@ -7,7 +7,7 @@ CPPFLAGS ?= -Isrc
 LDFLAGS ?= -noixemul
 
 TARGET := AmiDisk
-SOURCES := src/main.c src/core/ad_version.c src/io/trackdisk/trackdisk.c src/io/adf/adf.c src/operations/image_adf.c src/operations/verify_adf.c src/operations/restore_preflight.c src/operations/restore_adf.c src/operations/copy_disk.c
+SOURCES := src/main.c src/core/ad_version.c src/io/trackdisk/trackdisk.c src/io/adf/adf.c src/operations/image_adf.c src/operations/verify_adf.c src/operations/restore_preflight.c src/operations/restore_adf.c src/operations/copy_disk.c src/operations/recovery_read.c
 OBJECTS := $(SOURCES:.c=.o)
 
 .PHONY: all clean check
@@ -29,6 +29,7 @@ check:
 	python3 tools/check_m3_3a.py
 	python3 tools/check_m3_3b.py
 	python3 tools/check_m3_4.py
+	python3 tools/check_m4_1.py
 
 clean:
 	rm -f $(OBJECTS) $(TARGET)
