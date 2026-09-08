@@ -4,6 +4,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RECOVERY = (ROOT / "src/operations/recovery_read.c").read_text(encoding="utf-8")
 RECOVERY_H = (ROOT / "src/operations/recovery_read.h").read_text(encoding="utf-8")
+MAIN = (ROOT / "src/main.c").read_text(encoding="utf-8")
 MAKEFILE = (ROOT / "Makefile").read_text(encoding="utf-8")
 VERSION = (ROOT / "src/core/ad_version.h").read_text(encoding="utf-8")
 
@@ -41,6 +42,18 @@ assert RECOVERY.count("ad_td_get_change_number(&disk") >= 3, \
 
 for token in ["CMD_WRITE", "CMD_UPDATE", "CMD_CLEAR", "TD_FORMAT", "ETD_WRITE", "ETD_FORMAT", "ad_td_write_sector"]:
     assert token not in RECOVERY, f"M4.1 recovery foundation must remain source read-only: {token}"
+
+for token in [
+    '#include "operations/recovery_read.h"',
+    "recover-read",
+    "command_recover_read",
+    "ad_recovery_read_sector(unit, cylinder, head, sector, attempts",
+    "attempts must be 1..16",
+    "AD_RECOVERY_MAX_ATTEMPTS",
+    "recover-read OK:",
+    "recover-read failed:",
+]:
+    assert token in MAIN, f"missing M4.1 CLI qualification token: {token}"
 
 assert "src/operations/recovery_read.c" in MAKEFILE, "M4.1 source missing from build"
 assert "tools/check_m4_1.py" in MAKEFILE, "M4.1 static gate missing from make check"
