@@ -47,7 +47,23 @@ Disk-to-RAM-to-disk, per-track state and additional copy workflows may be added 
 
 ## M4 - Recovery
 
-Retries, partial images, bad-sector/track maps, resumable imaging and evidence-preserving reconstruction.
+Recovery remains source-read-only. The recovery path must never silently present substituted bytes as successfully recovered data; unreadable areas need explicit state/evidence.
+
+### M4.1 - Recovery read foundation
+
+Implemented, qualification pending. Adds bounded per-sector retry policy (1-16 attempts), deterministic retry accounting, real `TD_CHANGENUM` guards before/during/after reads, no-media handling and an explicit sector recovery record carrying CHS, attempts and last trackdisk result. No physical write primitive is reachable from this module.
+
+### M4.2 - Partial imaging and bad-sector map
+
+Build a full-geometry recovery artifact while explicitly recording GOOD/BAD/UNREAD sector state. Any placeholder bytes in an ADF-shaped reconstruction must be accompanied by machine-readable evidence and must never be described as recovered data.
+
+### M4.3 - Resumable recovery
+
+Resume from prior recovery evidence without re-reading already trusted sectors unless requested. Preserve acquisition provenance and source-media identity/change information.
+
+### M4.4 - Reconstruction and multi-pass policy
+
+Add controlled additional passes, track-oriented retry ordering and evidence-preserving reconstruction rules. Never modify the source disk.
 
 ## M5 - GUI
 
