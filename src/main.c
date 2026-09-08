@@ -7,6 +7,7 @@
 #include "io/trackdisk/trackdisk.h"
 #include "operations/copy_disk.h"
 #include "operations/image_adf.h"
+#include "operations/recovery_read.h"
 #include "operations/restore_adf.h"
 #include "operations/restore_preflight.h"
 #include "operations/verify_adf.h"
@@ -24,6 +25,7 @@ static void usage(const char *program)
     printf("  %s restore-preflight <path> <unit> <ERASE-DFn>\n", program);
     printf("  %s restore-adf <path> <unit> <ERASE-DFn>\n", program);
     printf("  %s copy-disk <source-unit> <destination-unit> <ERASE-DFn>\n", program);
+    printf("  %s recover-read <unit> <cylinder> <head> <sector> <attempts>\n", program);
     printf("  %s qualify-media-change <unit>\n", program);
 }
 
@@ -337,6 +339,43 @@ static int command_copy_disk(ULONG source_unit, ULONG destination_unit,
     return 0;
 }
 
+static int command_recover_read(ULONG unit, ULONG cylinder, ULONG head,
+                                ULONG sector, ULONG attempts)
+{
+    AdRecoverySectorRecord record;
+    AdRecoveryReadResult result;
+    unsigned char buffer[AD_TD_SECTOR_SIZE];
+
+    result = ad_recovery_read_sector(unit, cylinder, head, sector, attempts,
+                                     buffer, &record);
+    if (result != AD_RECOVERY_READ_OK) {
+        fprintf(stderr,
+                "recover-read failed: %s at C%u H%u S%u attempts=%u change=%u->%u",
+                ad_recovery_read_result_string(result),
+                (unsigned int)record.cylinder,
+                (unsigned int)record.head,
+                (unsigned int)record.sector,
+                (unsigned int)record.attempts,
+                (unsigned int)record.start_change_number,
+                (unsigned int)record.end_change_number);
+        if (record.last_source_result != AD_TD_OK) {
+            fprintf(stderr, " (%s)", ad_td_result_string(record.last_source_result));
+        }
+        fputc('\n', stderr);
+        return 2;
+    }
+
+    printf("recover-read OK: DF%u C%u H%u S%u attempts=%u change=%u\n",
+           (unsigned int)unit,
+           (unsigned int)cylinder,
+           (unsigned int)head,
+           (unsigned int)sector,
+           (unsigned int)record.attempts,
+           (unsigned int)record.end_change_number);
+    print_prefix16(buffer);
+    return 0;
+}
+
 static int command_qualify_media_change(ULONG unit)
 {
     AdTrackDisk disk;
@@ -416,6 +455,7 @@ int main(int argc, char **argv)
     ULONG cylinder;
     ULONG head;
     ULONG sector;
+    ULONG attempts;
 
     if (argc == 2 && strcmp(argv[1], "--version") == 0) {
         puts(ad_version_string());
@@ -497,6 +537,21 @@ int main(int argc, char **argv)
             return 1;
         }
         return command_copy_disk(source_unit, destination_unit, argv[4]);
+    }
+
+    if (argc == 7 && strcmp(argv[1], "recover-read") == 0 &&
+        parse_ulong(argv[2], &unit) && parse_ulong(argv[3], &cylinder) &&
+        parse_ulong(argv[4], &head) && parse_ulong(argv[5], &sector) &&
+        parse_ulong(argv[6], &attempts)) {
+        if (unit > 3UL) {
+            fprintf(stderr, "unit must be 0..3\n");
+            return 1;
+        }
+        if (attempts == 0UL || attempts > AD_RECOVERY_MAX_ATTEMPTS) {
+            fprintf(stderr, "attempts must be 1..16\n");
+            return 1;
+        }
+        return command_recover_read(unit, cylinder, head, sector, attempts);
     }
 
     if (argc == 3 && strcmp(argv[1], "qualify-media-change") == 0 &&
