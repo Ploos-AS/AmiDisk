@@ -6,9 +6,15 @@ Starting qualified baseline: `4ae68da65ba6db3d672b678ec0406918a6e79d14` (M3 GREE
 
 ## Scope
 
-M4.1 introduces only the bounded recovery-read primitive and its per-sector evidence record. It does not create partial ADF files yet and it does not write to physical media.
+M4.1 introduces the bounded recovery-read primitive, its per-sector evidence record, and a thin CLI qualification surface. It does not create partial ADF files yet and it does not write to physical media.
 
 The API is `ad_recovery_read_sector()` in `src/operations/recovery_read.[ch]`.
+
+The CLI is:
+
+```text
+AmiDisk recover-read <unit> <cylinder> <head> <sector> <attempts>
+```
 
 Required properties:
 
@@ -28,11 +34,17 @@ Required properties:
 Run:
 
 ```sh
+git fetch origin
+git checkout main
+git pull --ff-only origin main
+git status --short
+git rev-parse HEAD
+git rev-parse origin/main
+git rev-list --left-right --count origin/main...HEAD
 make clean
 make check
 make
 file AmiDisk
-./tools/check_m4_1.py
 ```
 
 Expected:
@@ -43,27 +55,123 @@ Expected:
 - `file AmiDisk` reports an AmigaOS loadseg executable.
 - version is `AmiDisk 0.4.0-m4.1`.
 
-## Runtime qualification strategy
+## Visible FS-UAE runtime qualification
 
-M4.1 has no user-facing recovery command yet; the public CLI integration belongs to the next M4 step once the retry primitive has passed host/native qualification. Runtime qualification will therefore be completed together with that integration, in visible FS-UAE only.
+Use visible FS-UAE only on the qualified Motorola 68000 / AmigaOS 2.04+ baseline. A normal standard-DD test disk in DF0 is sufficient for the mandatory success and no-media tests.
 
-The eventual runtime evidence must include:
+### 1. Version and source baseline
 
-1. healthy-sector recovery with retry budget 1 and a correct 512-byte result;
-2. healthy-sector recovery with a larger retry budget while proving attempts=1;
-3. invalid retry budgets 0 and >16 rejected before device I/O;
-4. no-media controlled rejection;
-5. real `TD_CHANGENUM` observation under eject/swap;
-6. if a naturally failing sector is available, exhausted retry accounting matching the configured budget;
-7. if no naturally failing sector is available, the exhausted branch remains statically verified and must not be claimed as runtime-observed;
-8. M1-M3 regressions remain green;
-9. source remains read-only and no guru/crash/hang is observed.
+Run:
 
-Do not add a production test backdoor merely to manufacture bad sectors.
+```text
+AmiDisk --version
+AmiDisk probe 0
+AmiDisk read-sector 0 0 0 0
+```
 
-## Safety audit
+Require version `0.4.0-m4.1`, media present, and a successful baseline sector read.
 
-`src/operations/recovery_read.c` must contain none of:
+### 2. Retry budget 1
+
+Run:
+
+```text
+AmiDisk recover-read 0 0 0 0 1
+```
+
+Require RC 0, `attempts=1`, unchanged media change number, and the same 16-byte prefix as `read-sector 0 0 0 0`.
+
+### 3. Larger retry budget on healthy media
+
+Run:
+
+```text
+AmiDisk recover-read 0 10 1 5 16
+```
+
+Require RC 0 and `attempts=1`. A healthy sector must not consume the remaining retry budget. Compare the printed prefix with:
+
+```text
+AmiDisk read-sector 0 10 1 5
+```
+
+They must match.
+
+### 4. Retry budget boundaries
+
+Run:
+
+```text
+AmiDisk recover-read 0 0 0 0 0
+AmiDisk recover-read 0 0 0 0 17
+```
+
+Require controlled CLI rejection, RC 1, and `attempts must be 1..16`. These values must be rejected before the recovery backend/device path is entered.
+
+Also run the legal maximum:
+
+```text
+AmiDisk recover-read 0 79 1 10 16
+```
+
+Require RC 0 on healthy media.
+
+### 5. CHS and unit ranges
+
+Run invalid cases such as:
+
+```text
+AmiDisk recover-read 4 0 0 0 1
+AmiDisk recover-read 0 80 0 0 1
+AmiDisk recover-read 0 0 2 0 1
+AmiDisk recover-read 0 0 0 11 1
+```
+
+Unit 4 must be rejected by CLI with RC 1. Invalid CHS must fail in a controlled way with no crash/guru/hang and no physical write.
+
+### 6. No-media
+
+Eject DF0 and confirm:
+
+```text
+AmiDisk probe 0
+```
+
+reports media absent. Then run:
+
+```text
+AmiDisk recover-read 0 0 0 0 4
+```
+
+Require controlled RC 2, no-media result, zero attempts, and no crash/guru/hang. Remount the source afterward.
+
+### 7. Real media-change observation
+
+Run:
+
+```text
+AmiDisk qualify-media-change 0
+```
+
+Eject/swap while the command waits. Require `TD_CHANGENUM` to change.
+
+If practical, attempt to eject/swap during a `recover-read` invocation. A controlled lower-level read/status abort is acceptable if it occurs before the explicit `AD_RECOVERY_READ_ERR_MEDIA_CHANGED` branch. Document the exact result honestly. Do not add a production test backdoor to force timing or a bad sector.
+
+### 8. Exhausted retry branch
+
+If a naturally unreadable sector is available, run recovery with a known budget, for example:
+
+```text
+AmiDisk recover-read 0 C H S 4
+```
+
+Require controlled RC 2 and `attempts=4` when all four reads genuinely fail without a media replacement.
+
+If no naturally unreadable sector is available, record the exhausted branch as statically verified but not runtime-observed. This does not block M4.1 PASS provided the bounded-loop implementation, range checks, no-media behavior and real media-change semantics are qualified.
+
+### 9. Read-only safety audit
+
+Statically confirm `src/operations/recovery_read.c` contains none of:
 
 - `CMD_WRITE`
 - `CMD_UPDATE`
@@ -73,4 +181,40 @@ Do not add a production test backdoor merely to manufacture bad sectors.
 - `ETD_FORMAT`
 - `ad_td_write_sector`
 
-M4.1 may only observe/read the source disk.
+The only sector I/O primitive in the retry loop must be one shared call site to `ad_td_read_sector()`.
+
+### 10. Regression suite
+
+Run representative M1-M3 regressions:
+
+```text
+AmiDisk probe 0
+AmiDisk read-sector 0 0 0 0
+AmiDisk adf-info <known-good.adf>
+AmiDisk adf-read-sector <known-good.adf> 0 0 0
+AmiDisk image-adf 0 <new-output.adf>
+AmiDisk verify-adf 0 <matching.adf>
+```
+
+M3.3a preflight should also remain read-only and PASS against a valid disposable destination setup. Destructive M3.3b/M3.4 reruns are optional because M4.1 does not touch the write path; their static gates must still PASS.
+
+## PASS criteria
+
+M4.1 may be marked GREEN only when:
+
+- host/static/native build is green;
+- `recover-read` works on healthy media with budgets 1 and 16;
+- a healthy sector reports `attempts=1` even with a larger budget;
+- retry budgets 0 and 17 are rejected;
+- no-media is runtime-observed as controlled failure;
+- real `TD_CHANGENUM` change is runtime-observed;
+- exhausted retry behavior is either runtime-observed on a naturally failing sector or explicitly documented as static-only;
+- the recovery module remains physically read-only;
+- M1-M3 regressions remain green;
+- no crash, guru or hang is observed.
+
+Do not add a production test backdoor merely to manufacture bad sectors or media-change timing.
+
+## Final report
+
+Record starting HEAD, final HEAD, origin/main, divergence, worktree, all static gates, native build, version, healthy-read results, attempts counts, invalid-budget results, invalid-range results, no-media result, media-change evidence, exhausted-branch status, read-only audit, regressions and crash/guru/hang status. Commit the evidence/report on `main`, push it, and leave the worktree clean with divergence `0 0`.
