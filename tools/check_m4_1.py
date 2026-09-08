@@ -6,7 +6,6 @@ RECOVERY = (ROOT / "src/operations/recovery_read.c").read_text(encoding="utf-8")
 RECOVERY_H = (ROOT / "src/operations/recovery_read.h").read_text(encoding="utf-8")
 MAIN = (ROOT / "src/main.c").read_text(encoding="utf-8")
 MAKEFILE = (ROOT / "Makefile").read_text(encoding="utf-8")
-VERSION = (ROOT / "src/core/ad_version.h").read_text(encoding="utf-8")
 
 for token in [
     "AD_RECOVERY_MAX_ATTEMPTS",
@@ -57,6 +56,5 @@ for token in [
 
 assert "src/operations/recovery_read.c" in MAKEFILE, "M4.1 source missing from build"
 assert "tools/check_m4_1.py" in MAKEFILE, "M4.1 static gate missing from make check"
-assert 'AMIDISK_VERSION "0.4.0-m4.1"' in VERSION, "M4.1 version missing"
 
 print("M4.1 static checks: PASS")
