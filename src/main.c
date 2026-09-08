@@ -7,6 +7,7 @@
 #include "io/trackdisk/trackdisk.h"
 #include "operations/copy_disk.h"
 #include "operations/image_adf.h"
+#include "operations/recovery_image.h"
 #include "operations/recovery_read.h"
 #include "operations/restore_adf.h"
 #include "operations/restore_preflight.h"
@@ -26,6 +27,7 @@ static void usage(const char *program)
     printf("  %s restore-adf <path> <unit> <ERASE-DFn>\n", program);
     printf("  %s copy-disk <source-unit> <destination-unit> <ERASE-DFn>\n", program);
     printf("  %s recover-read <unit> <cylinder> <head> <sector> <attempts>\n", program);
+    printf("  %s recover-image <unit> <image-path> <map-path> <attempts>\n", program);
     printf("  %s qualify-media-change <unit>\n", program);
 }
 
@@ -376,6 +378,67 @@ static int command_recover_read(ULONG unit, ULONG cylinder, ULONG head,
     return 0;
 }
 
+static int command_recover_image(ULONG unit, const char *image_path,
+                                 const char *map_path, ULONG attempts)
+{
+    AdRecoveryImageReport report;
+    AdRecoveryImageResult result;
+
+    printf("Recovery imaging DF%u: -> %s (map %s, attempts=%u)\n",
+           (unsigned int)unit, image_path, map_path, (unsigned int)attempts);
+    result = ad_recovery_image_disk(unit, image_path, map_path, attempts,
+                                    &report);
+
+    if (result == AD_RECOVERY_IMAGE_OK) {
+        printf("recover-image OK: good=%u bad=%u unread=%u placeholders=%u sectors=%u bytes=%u change=%u map=%s\n",
+               (unsigned int)report.good_sectors,
+               (unsigned int)report.bad_sectors,
+               (unsigned int)report.unread_sectors,
+               (unsigned int)report.placeholder_sectors,
+               (unsigned int)report.sectors_output,
+               (unsigned int)report.bytes_output,
+               (unsigned int)report.end_change_number,
+               map_path);
+        return 0;
+    }
+
+    if (result == AD_RECOVERY_IMAGE_PARTIAL) {
+        fprintf(stderr,
+                "recover-image PARTIAL: good=%u bad=%u unread=%u placeholders=%u sectors=%u bytes=%u change=%u->%u; consult map %s",
+                (unsigned int)report.good_sectors,
+                (unsigned int)report.bad_sectors,
+                (unsigned int)report.unread_sectors,
+                (unsigned int)report.placeholder_sectors,
+                (unsigned int)report.sectors_output,
+                (unsigned int)report.bytes_output,
+                (unsigned int)report.start_change_number,
+                (unsigned int)report.end_change_number,
+                map_path);
+        if (report.first_bad_valid) {
+            fprintf(stderr, " first-bad=C%u/H%u/S%u",
+                    (unsigned int)report.first_bad_cylinder,
+                    (unsigned int)report.first_bad_head,
+                    (unsigned int)report.first_bad_sector);
+        }
+        if (report.first_unread_valid) {
+            fprintf(stderr, " first-unread=C%u/H%u/S%u",
+                    (unsigned int)report.first_unread_cylinder,
+                    (unsigned int)report.first_unread_head,
+                    (unsigned int)report.first_unread_sector);
+        }
+        fputc('\n', stderr);
+        return 3;
+    }
+
+    fprintf(stderr, "recover-image failed: %s",
+            ad_recovery_image_result_string(result));
+    if (report.last_source_result != AD_TD_OK) {
+        fprintf(stderr, " (%s)", ad_td_result_string(report.last_source_result));
+    }
+    fputc('\n', stderr);
+    return 2;
+}
+
 static int command_qualify_media_change(ULONG unit)
 {
     AdTrackDisk disk;
@@ -552,6 +615,19 @@ int main(int argc, char **argv)
             return 1;
         }
         return command_recover_read(unit, cylinder, head, sector, attempts);
+    }
+
+    if (argc == 6 && strcmp(argv[1], "recover-image") == 0 &&
+        parse_ulong(argv[2], &unit) && parse_ulong(argv[5], &attempts)) {
+        if (unit > 3UL) {
+            fprintf(stderr, "unit must be 0..3\n");
+            return 1;
+        }
+        if (attempts == 0UL || attempts > AD_RECOVERY_MAX_ATTEMPTS) {
+            fprintf(stderr, "attempts must be 1..16\n");
+            return 1;
+        }
+        return command_recover_image(unit, argv[3], argv[4], attempts);
     }
 
     if (argc == 3 && strcmp(argv[1], "qualify-media-change") == 0 &&
